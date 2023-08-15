@@ -1,5 +1,6 @@
 package com.example.polarhrdemo
 
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +21,11 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
         return ViewHolder(itemView)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = deviceList[position]
-        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  HeartRate: ${device.getLatestHeartRate()}"
+        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  HeartRate: ${device.getLatestHeartRate()} \n" +
+                "HR Percentage: ${device.getLatestHRPercentage()}  HR Quantile: ${device.getLatestHRQuantile()}"
     }
 
     override fun getItemCount() = deviceList.size

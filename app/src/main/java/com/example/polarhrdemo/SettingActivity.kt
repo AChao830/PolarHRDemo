@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,6 +38,8 @@ class SettingActivity: AppCompatActivity() {
         private const val TAG = "SettingActivity"
     }
 
+    private lateinit var textViewMaxHR: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -45,6 +48,14 @@ class SettingActivity: AppCompatActivity() {
         testModeSwitch.isChecked = Settings.testMode // 初始化开关的状态
         testModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             onCheckedChangeTestModeSwitch(isChecked)
+        }
+
+        textViewMaxHR = findViewById(R.id.textViewMaxHeartRate)
+        textViewMaxHR.text = "MAX HEART RATE: ${Settings.maxHeartRate}"
+
+        val buttonChangeMaxHR: Button = findViewById(R.id.buttonChangeMaxHeartRate)
+        buttonChangeMaxHR.setOnClickListener {
+            onClickChangeMaxHRButton(it)
         }
     }
 
@@ -59,6 +70,32 @@ class SettingActivity: AppCompatActivity() {
             Settings.testMode = false
             showToast("Test Mode is off")
         }
+    }
+
+    private fun onClickChangeMaxHRButton(view: View){
+        showChangeMaxHRDialog(view)
+    }
+
+    private fun showChangeMaxHRDialog(view: View){
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new max heart rate")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.device_id_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_device_id)
+        input.setText(Settings.maxHeartRate.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newMaxHR = input.text.toString().toIntOrNull()
+            if (newMaxHR != null) {
+                Settings.maxHeartRate = newMaxHR
+                textViewMaxHR.text = "MAX HEART RATE: ${Settings.maxHeartRate}"
+                showToast("Changed max heart rate to $newMaxHR")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
     }
 
     // 底部提示信息条
