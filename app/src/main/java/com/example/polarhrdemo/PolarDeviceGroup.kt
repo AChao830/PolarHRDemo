@@ -1,5 +1,7 @@
 package com.example.polarhrdemo
 
+import java.time.Period
+
 
 class PolarDeviceGroup (val groupId: String) {
 
@@ -14,6 +16,21 @@ class PolarDeviceGroup (val groupId: String) {
     fun deleteDevice(){
         // TODO:以后实现
         return
+    }
+
+    // 获取是否正在录取状态
+    fun getRecordStatus():Boolean {
+        return if (polarDeviceList.isEmpty()) { false } else { polarDeviceList[0].isRecord }
+    }
+
+    // 获取是否区间状态
+    fun getPeriodStatus():Boolean {
+        return if (polarDeviceList.isEmpty()) { false } else { polarDeviceList[0].isPeriod }
+    }
+
+    // 获取在哪一个区间
+    fun getPeriod(): Int {
+        return if (polarDeviceList.isEmpty()) { 0 } else { polarDeviceList[0].period }
     }
 
 }

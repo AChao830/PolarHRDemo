@@ -18,4 +18,6 @@
     <string name="test_mode_switch">Test Mode</string>
     <string name="settings_button">Settings</string>
     <string name="button_change_max_hr">Change</string>
+    <string name="record_status">Recording:False</string>
+    <string name="period_status">Period:None</string>
 </resources>

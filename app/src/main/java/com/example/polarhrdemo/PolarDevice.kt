@@ -31,8 +31,8 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     }
 
     var period = 1 // 区间初始，从1开始
-    private var isRecord = false // 控制目前是否处于录制内
-    private var isPeriod = false // 控制目前是否处于区间内
+    var isRecord = false // 控制目前是否处于录制内
+    var isPeriod = false // 控制目前是否处于区间内
     private var deviceDataList = mutableListOf<DeviceData>() // 列表储存数据
     private var latestHeartRate = "0" // 储存最新的心率，用于数据的展示
     private var latestHRPercentage = "0" // 储存最新的心率百分比，用于数据的展示

@@ -92,6 +92,7 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
                 polarDevice.startRecord()
             }
         }
+
     }
 
 

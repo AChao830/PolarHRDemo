@@ -18,6 +18,8 @@ class PolarDeviceGroupAdapter(private val deviceGroups: List<PolarDeviceGroup>) 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewGroupName: TextView = itemView.findViewById(R.id.textViewGroupName)
+        val textViewRecordStatus: TextView = itemView.findViewById(R.id.textViewRecordStatus)
+        val textViewPeriodStatus: TextView = itemView.findViewById(R.id.textViewPeriodStatus)
         val recyclerViewDevices: RecyclerView = itemView.findViewById(R.id.recyclerViewDeviceInfo)
         val buttonAddDevice: Button = itemView.findViewById(R.id.buttonAddDevice)
         val buttonExportData: Button = itemView.findViewById(R.id.buttonExportData)
@@ -47,6 +49,9 @@ class PolarDeviceGroupAdapter(private val deviceGroups: List<PolarDeviceGroup>) 
         holder.recyclerViewDevices.layoutManager = LinearLayoutManager(holder.itemView.context)
         val deviceInfoAdapter = PolarDeviceInfoAdapter(group.polarDeviceList)
         holder.recyclerViewDevices.adapter = deviceInfoAdapter
+
+        holder.textViewRecordStatus.text = if (group.getRecordStatus()) { "Recording:True" } else { "Recording:False" }
+        holder.textViewPeriodStatus.text = if (group.getPeriodStatus()) { "Period:${group.getPeriod()}" } else { "Period:" }
     }
 
     override fun getItemCount() = deviceGroups.size
