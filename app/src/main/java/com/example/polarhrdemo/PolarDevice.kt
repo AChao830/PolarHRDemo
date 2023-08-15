@@ -63,7 +63,7 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
             }
 
             override fun deviceConnected(polarDeviceInfo: PolarDeviceInfo) {
-                Toast.makeText(context, R.string.connected, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Device:${deviceId} connected!", Toast.LENGTH_SHORT).show()
             }
 
             override fun deviceConnecting(polarDeviceInfo: PolarDeviceInfo) {
@@ -201,6 +201,7 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
                             for (sample in hrData.samples) {
                                 latestHeartRate = sample.hr.toString()
                                 addValue(sample)
+                                updateCallback?.updateDeviceInfo()
                             }
                         },
                         { error: Throwable ->
