@@ -31,13 +31,13 @@
             android:text="@string/add_device_button" />
 
         <Button
-            android:id="@+id/buttonExportCSV"
+            android:id="@+id/buttonExportData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onClickExportGroupDataButton"
             android:tag="1"
-            android:text="@string/export_csv_button" />
+            android:text="@string/export_data_button" />
 
     </LinearLayout>
 

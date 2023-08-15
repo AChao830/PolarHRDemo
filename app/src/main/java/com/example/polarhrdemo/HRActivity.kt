@@ -80,12 +80,7 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
     // 处理点击输出组数据按钮事务
     fun onClickExportGroupDataButton (view: View) {
         val groupId = view.tag.toString()
-        val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
-        if (polarDeviceGroup != null) {
-            for (polarDevice in polarDeviceGroup.polarDeviceList) {
-                polarDevice.exportDataToCSV(applicationContext, "group:${groupId}_device:${polarDevice.deviceId}.csv")
-            }
-        }
+        showDialogExportData(view, groupId)
     }
 
     // 处理点击开始录制按钮事务
@@ -172,6 +167,38 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
             }
         }
         dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // 处理选择输出格式
+    private fun showDialogExportData(view:View, groupId: String) {
+        val options = arrayOf("CSV", "Excel")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Output Format")
+            .setSingleChoiceItems(options, -1) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                        if (polarDeviceGroup != null) {
+                            for (polarDevice in polarDeviceGroup.polarDeviceList) {
+                                polarDevice.exportDataToCSV(applicationContext, "group:${groupId}_device:${polarDevice.deviceId}.csv")
+                            }
+                        }
+                        showToast("Data Exported as CSV Files")
+                    }
+                    1 -> {
+                        val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                        if (polarDeviceGroup != null) {
+                            for (polarDevice in polarDeviceGroup.polarDeviceList) {
+                                polarDevice.exportDataToExcel(applicationContext, "group:${groupId}_device:${polarDevice.deviceId}.xls")
+                            }
+                        }
+                        showToast("Data Exported as Excel Files")
+                    }
+                }
+            }
+        val dialog = builder.create()
         dialog.show()
     }
 

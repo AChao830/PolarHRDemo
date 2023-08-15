@@ -5,7 +5,7 @@
     <string name="add_group_button">Add Group</string>
     <string name="delete_group_button">Delete Group</string>
     <string name="add_device_button">Add Device</string>
-    <string name="export_csv_button">Export CSV</string>
+    <string name="export_data_button">Export Data</string>
     <string name="start_record_button">Start R</string>
     <string name="stop_record_button">Stop R</string>
     <string name="start_period_button">Start P</string>

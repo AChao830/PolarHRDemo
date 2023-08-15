@@ -16,6 +16,10 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.util.UUID
+import jxl.Workbook
+import jxl.write.Label
+import jxl.write.WritableSheet
+import jxl.write.WritableWorkbook
 
 class PolarDevice (val deviceId: String, private val context: Context, private val testMode:Boolean) {
     /**
@@ -256,4 +260,38 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
             // 可以考虑其他选项，比如内部存储或云存储。
         }
     }
+
+    // 导出数据到外部储存目录，CSV格式
+    // 两个参数，一个是applicationContext，另一个是文件名称
+    // TODO:一时半会修复不好
+    fun exportDataToExcel(context: Context, fileName: String) {
+        val file = File(context.getExternalFilesDir(null), fileName)
+        try {
+            val writableWorkbook: WritableWorkbook = Workbook.createWorkbook(file)
+            val sheet: WritableSheet = writableWorkbook.createSheet("DataSheet", 0)
+
+            // Add headers
+            sheet.addCell(Label(0, 0, "Timestamp"))
+            sheet.addCell(Label(1, 0, "HeartRate"))
+            sheet.addCell(Label(2, 0, "Period"))
+
+            // Add data rows
+            for ((index, data) in deviceDataList.withIndex()) {
+                sheet.addCell(Label(0, index + 1, data.timestamp.toString()))
+                sheet.addCell(Label(1, index + 1, data.hr.toString()))
+                sheet.addCell(Label(2, index + 1, data.period?.toString()))
+            }
+
+            // Write and close the workbook
+            writableWorkbook.write()
+            writableWorkbook.close()
+
+            // TODO: optional
+            // You can notify the user or share the file with other apps here.
+            // notifyFileCreated(context, file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

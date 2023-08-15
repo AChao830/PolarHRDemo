@@ -20,7 +20,7 @@ class PolarDeviceGroupAdapter(private val deviceGroups: List<PolarDeviceGroup>) 
         val textViewGroupName: TextView = itemView.findViewById(R.id.textViewGroupName)
         val recyclerViewDevices: RecyclerView = itemView.findViewById(R.id.recyclerViewDeviceInfo)
         val buttonAddDevice: Button = itemView.findViewById(R.id.buttonAddDevice)
-        val buttonExportCSV: Button = itemView.findViewById(R.id.buttonExportCSV)
+        val buttonExportData: Button = itemView.findViewById(R.id.buttonExportData)
         val buttonStartRecord: Button = itemView.findViewById(R.id.buttonStartRecord)
         val buttonStopRecord: Button = itemView.findViewById(R.id.buttonStopRecord)
         val buttonStartPeriod: Button = itemView.findViewById(R.id.buttonStartPeriod)
@@ -37,7 +37,7 @@ class PolarDeviceGroupAdapter(private val deviceGroups: List<PolarDeviceGroup>) 
         val group = deviceGroups[position]
         holder.textViewGroupName.text = group.groupId
         holder.buttonAddDevice.tag = group.groupId
-        holder.buttonExportCSV.tag = group.groupId
+        holder.buttonExportData.tag = group.groupId
         holder.buttonStartRecord.tag = group.groupId
         holder.buttonStopRecord.tag = group.groupId
         holder.buttonStartPeriod.tag = group.groupId
