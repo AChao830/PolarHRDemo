@@ -33,12 +33,16 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     var period = 1 // 区间初始，从1开始
     var isRecord = false // 控制目前是否处于录制内
     var isPeriod = false // 控制目前是否处于区间内
+    var rrAvailable = false
     private var deviceDataList = mutableListOf<DeviceData>() // 列表储存数据
     private var latestHeartRate = "0" // 储存最新的心率，用于数据的展示
     private var latestHRPercentage = "0" // 储存最新的心率百分比，用于数据的展示
     private var latestHRQuantile = "0" // 储存最新的心率分位点，用于数据的展示
+    private var latestHRV = "0"
     lateinit var fwVersion: String // 储存fw版本
     lateinit var battery: String // 储存电量
+
+    private var rrList = mutableListOf<Double>() // 列表储存RR数据
 
     private var updateCallback: UpdateCallback? = null
     private var testUtils = TestUtils()
@@ -60,6 +64,7 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
         val hr: Int, // 心率
         val hrPercentage: Float = 0.0F, // 储存心率离最大心率百分比
         val hrQuantile: Int = 0, // 心率与最大心率的分位点
+        val HRV: Double?, // HRV
         val period: Int? // 区间
     )
 
@@ -127,17 +132,34 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     private fun addValue(polarData: PolarHrData.PolarHrSample) {
         val newHrPercentage: Float = (polarData.hr.toFloat() / Settings.maxHeartRate.toFloat()) * 100
         val newHrQuantile: Int = if (newHrPercentage > 100 ) { 6 } else { ((newHrPercentage / 20) + 1).toInt() }
-        // 更新心率百分比和心率分位点
+        var newHRV: Double = -1.0
+        if (polarData.rrAvailable) {
+            // 先判断有没有
+            rrAvailable = true
+            for (rr in polarData.rrsMs) {
+                rrList.add(rr.toDouble())
+            }
+        }
+        if (rrList.size >= 2) {
+            newHRV = calculateVariance(rrList)
+            latestHRV = "%.2f".format(newHRV)
+        }
+        // 更新数据
+        latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.1f".format(newHrPercentage) + "%"
         latestHRQuantile = newHrQuantile.toString()
         if (isRecord) {
-            if (isPeriod) {
-                val tempData = DeviceData(System.currentTimeMillis(), polarData.hr, newHrPercentage, newHrQuantile, period)
-                deviceDataList.add(0, tempData)
-            } else {
-                val tempData = DeviceData(System.currentTimeMillis(), polarData.hr, newHrPercentage, newHrQuantile, null)
-                deviceDataList.add(0, tempData)
-            }
+            val newHRVValue = if (rrAvailable) newHRV else null
+            val newPeriodValue = if (isPeriod) period else null
+            val tempData = DeviceData(
+                System.currentTimeMillis(),
+                polarData.hr,
+                newHrPercentage,
+                newHrQuantile,
+                newHRVValue,
+                newPeriodValue
+            )
+            deviceDataList.add(0, tempData)
         }
     }
 
@@ -190,6 +212,10 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     fun getLatestHRQuantile(): String {
         return latestHRQuantile
     }
+    // 提供给recycleView使用，获取最新的HRV(SDNN方法)
+    fun getLatestHRV(): String {
+        return latestHRV
+    }
 
     // 开始监听
     private fun streamHR() {
@@ -204,7 +230,6 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
                     .subscribe(
                         { hrData: PolarHrData ->
                             for (sample in hrData.samples) {
-                                latestHeartRate = sample.hr.toString()
                                 addValue(sample)
                                 updateCallback?.updateDeviceInfo()
                             }
@@ -220,7 +245,6 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
                     .subscribe(
                         { hrData: PolarHrData ->
                             for (sample in hrData.samples) {
-                                latestHeartRate = sample.hr.toString()
                                 addValue(sample)
                                 updateCallback?.updateDeviceInfo()
                             }
@@ -247,12 +271,12 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     // 两个参数，一个是applicationContext，另一个是文件名称
     fun exportDataToCSV(context: Context, fileName: String) {
         // CSV头
-        val csvHeader = "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,Period\n"
+        val csvHeader = "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,HeartRateVariability,Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
         for (data in deviceDataList) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
-            val csvLine = "${data.timestamp},${data.hr},${"%.1f".format(data.hrPercentage)},${data.hrQuantile},$periodValue\n"
+            val csvLine = "${data.timestamp},${data.hr},${"%.1f".format(data.hrPercentage)},${data.hrQuantile},${"%.2f".format(data.HRV)},$periodValue\n"
             csvContent.append(csvLine)
         }
         val csvData = csvContent.toString()
@@ -280,7 +304,6 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
 
     // 导出数据到外部储存目录，CSV格式
     // 两个参数，一个是applicationContext，另一个是文件名称
-    // TODO:一时半会修复不好
     fun exportDataToExcel(context: Context, fileName: String) {
         val file = File(context.getExternalFilesDir(null), fileName)
         try {
@@ -292,7 +315,8 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
             sheet.addCell(Label(1, 0, "HeartRate"))
             sheet.addCell(Label(2, 0, "HeartRatePercentage"))
             sheet.addCell(Label(3, 0, "HeartRateQuantile"))
-            sheet.addCell(Label(4, 0, "Period"))
+            sheet.addCell(Label(4, 0, "HeartRateVariability"))
+            sheet.addCell(Label(5, 0, "Period"))
 
             // Add data rows
             for ((index, data) in deviceDataList.withIndex()) {
@@ -300,7 +324,8 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
                 sheet.addCell(Label(1, index + 1, data.hr.toString()))
                 sheet.addCell(Label(2, index + 1, "%.1f".format(data.hrPercentage)))
                 sheet.addCell(Label(3, index + 1, data.hrQuantile.toString()))
-                sheet.addCell(Label(4, index + 1, data.period?.toString()))
+                sheet.addCell(Label(4, index + 1, "%.2f".format(data.HRV)))
+                sheet.addCell(Label(5, index + 1, data.period?.toString()))
             }
 
             // Write and close the workbook
@@ -313,6 +338,13 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // 计算方差
+    private fun calculateVariance(numbers: List<Double>): Double {
+        val mean = numbers.average()
+        val squaredDifferences = numbers.map { (it - mean) * (it - mean) }
+        return squaredDifferences.average()
     }
 
 }
