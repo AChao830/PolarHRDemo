@@ -17,6 +17,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class HRActivity : AppCompatActivity() , UpdateCallback {
     companion object {
@@ -67,7 +69,15 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
 
     // 处理点击删除组按钮事务
     fun onClickDeleteGroupButton (view: View) {
-        // TODO: not implemented
+        val groupId = view.tag.toString()
+        val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+        if (polarDeviceGroup != null) {
+            for (device in polarDeviceGroup.polarDeviceList) {
+                device.disconnectDevice()
+            }
+            polarDeviceGroupList.remove(polarDeviceGroup)
+            polarDeviceGroupAdapter.updateData()
+        }
     }
 
     // --------------------组内设备管理--------------------
@@ -94,7 +104,6 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
         }
 
     }
-
 
     // 处理点击结束录制按钮事务
     fun onClickStopGroupRecordButton (view: View) {
@@ -181,18 +190,20 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
                 when (which) {
                     0 -> {
                         val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                        val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
                         if (polarDeviceGroup != null) {
                             for (polarDevice in polarDeviceGroup.polarDeviceList) {
-                                polarDevice.exportDataToCSV(applicationContext, "group:${groupId}_device:${polarDevice.deviceId}.csv")
+                                polarDevice.exportDataToCSV(groupId, applicationContext, "${groupId}_${polarDevice.deviceId}_${currentDateTime}.csv")
                             }
                         }
                         showToast("Data Exported as CSV Files")
                     }
                     1 -> {
                         val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                        val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"))
                         if (polarDeviceGroup != null) {
                             for (polarDevice in polarDeviceGroup.polarDeviceList) {
-                                polarDevice.exportDataToExcel(applicationContext, "group:${groupId}_device:${polarDevice.deviceId}.xls")
+                                polarDevice.exportDataToExcel(groupId, applicationContext, "${groupId}_${polarDevice.deviceId}_${currentDateTime}.xls")
                             }
                         }
                         showToast("Data Exported as Excel Files")

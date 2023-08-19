@@ -1,9 +1,11 @@
 package com.example.polarhrdemo
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.polar.sdk.api.PolarBleApi
 import com.polar.sdk.api.PolarBleApiCallback
 import com.polar.sdk.api.PolarBleApiDefaultImpl.defaultImplementation
@@ -16,6 +18,8 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.util.UUID
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import jxl.Workbook
 import jxl.write.Label
 import jxl.write.WritableSheet
@@ -47,6 +51,9 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
     private var updateCallback: UpdateCallback? = null
     private var testUtils = TestUtils()
 
+    // 定义时间格式
+    private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+
     // 初始化polar api
     private var api: PolarBleApi = defaultImplementation(
         context,
@@ -60,7 +67,7 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
 
     // 设备数据类，用以储存设备的数据
     data class DeviceData (
-        val timestamp: Long, // 时间戳
+        val timestamp: String, // 时间戳
         val hr: Int, // 心率
         val hrPercentage: Float = 0.0F, // 储存心率离最大心率百分比
         val hrQuantile: Int = 0, // 心率与最大心率的分位点
@@ -130,6 +137,10 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
 
     // 添加数据，如果在区间内就把区间也纯存进来，否则为null
     private fun addValue(polarData: PolarHrData.PolarHrSample) {
+        // 时间戳
+        val currentDateTime = LocalDateTime.now() // 获取时间
+        val formattedDateTime = currentDateTime.format(formatter) // 格式化时间
+
         val newHrPercentage: Float = (polarData.hr.toFloat() / Settings.maxHeartRate.toFloat()) * 100
         val newHrQuantile: Int = if (newHrPercentage > 100 ) { 6 } else { ((newHrPercentage / 20) + 1).toInt() }
         var newHRV: Double = -1.0
@@ -152,7 +163,7 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
             val newHRVValue = if (rrAvailable) newHRV else null
             val newPeriodValue = if (isPeriod) period else null
             val tempData = DeviceData(
-                System.currentTimeMillis(),
+                formattedDateTime,
                 polarData.hr,
                 newHrPercentage,
                 newHrQuantile,
@@ -269,12 +280,14 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
 
     // 导出数据到外部储存目录，CSV格式
     // 两个参数，一个是applicationContext，另一个是文件名称
-    fun exportDataToCSV(context: Context, fileName: String) {
+    fun exportDataToCSV(groupId:String, context: Context, fileName: String) {
         // CSV头
-        val csvHeader = "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,HeartRateVariability,Period\n"
+        val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" +
+                "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,HeartRateVariability,Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
-        for (data in deviceDataList) {
+        for (data in deviceDataList.reversed()) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
             val csvLine = "${data.timestamp},${data.hr},${"%.1f".format(data.hrPercentage)},${data.hrQuantile},${"%.2f".format(data.HRV)},$periodValue\n"
             csvContent.append(csvLine)
@@ -304,28 +317,37 @@ class PolarDevice (val deviceId: String, private val context: Context, private v
 
     // 导出数据到外部储存目录，CSV格式
     // 两个参数，一个是applicationContext，另一个是文件名称
-    fun exportDataToExcel(context: Context, fileName: String) {
+    fun exportDataToExcel(groupId:String, context: Context, fileName: String) {
         val file = File(context.getExternalFilesDir(null), fileName)
         try {
             val writableWorkbook: WritableWorkbook = Workbook.createWorkbook(file)
             val sheet: WritableSheet = writableWorkbook.createSheet("DataSheet", 0)
 
+            // Add head info
+            val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            sheet.addCell(Label(0, 0, "DeviceID"))
+            sheet.addCell(Label(1, 0, deviceId))
+            sheet.addCell(Label(2, 0, "GroupID"))
+            sheet.addCell(Label(3, 0, groupId))
+            sheet.addCell(Label(4, 0, "Date"))
+            sheet.addCell(Label(5, 0, currentDateTime))
+
             // Add headers
-            sheet.addCell(Label(0, 0, "Timestamp"))
-            sheet.addCell(Label(1, 0, "HeartRate"))
-            sheet.addCell(Label(2, 0, "HeartRatePercentage"))
-            sheet.addCell(Label(3, 0, "HeartRateQuantile"))
-            sheet.addCell(Label(4, 0, "HeartRateVariability"))
-            sheet.addCell(Label(5, 0, "Period"))
+            sheet.addCell(Label(0, 1, "Timestamp"))
+            sheet.addCell(Label(1, 1, "HeartRate"))
+            sheet.addCell(Label(2, 1, "HeartRatePercentage"))
+            sheet.addCell(Label(3, 1, "HeartRateQuantile"))
+            sheet.addCell(Label(4, 1, "HeartRateVariability"))
+            sheet.addCell(Label(5, 1, "Period"))
 
             // Add data rows
-            for ((index, data) in deviceDataList.withIndex()) {
-                sheet.addCell(Label(0, index + 1, data.timestamp.toString()))
-                sheet.addCell(Label(1, index + 1, data.hr.toString()))
-                sheet.addCell(Label(2, index + 1, "%.1f".format(data.hrPercentage)))
-                sheet.addCell(Label(3, index + 1, data.hrQuantile.toString()))
-                sheet.addCell(Label(4, index + 1, "%.2f".format(data.HRV)))
-                sheet.addCell(Label(5, index + 1, data.period?.toString()))
+            for ((index, data) in deviceDataList.reversed().withIndex()) {
+                sheet.addCell(Label(0, index + 2, data.timestamp.toString()))
+                sheet.addCell(Label(1, index + 2, data.hr.toString()))
+                sheet.addCell(Label(2, index + 2, "%.1f".format(data.hrPercentage)))
+                sheet.addCell(Label(3, index + 2, data.hrQuantile.toString()))
+                sheet.addCell(Label(4, index + 2, "%.2f".format(data.HRV)))
+                sheet.addCell(Label(5, index + 2, data.period?.toString()))
             }
 
             // Write and close the workbook
