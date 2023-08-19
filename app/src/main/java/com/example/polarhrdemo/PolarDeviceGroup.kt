@@ -13,9 +13,15 @@ class PolarDeviceGroup (val groupId: String) {
     }
 
     // 删除组内设备
-    fun deleteDevice(){
-        // TODO:以后实现
-        return
+    fun deleteDevice(deviceId: String): Boolean{
+        for (device in polarDeviceList) {
+            if (device.deviceId == deviceId) {
+                device.disconnectDevice()
+                polarDeviceList.remove(device)
+                return true
+            }
+        }
+        return false
     }
 
     // 获取是否正在录取状态

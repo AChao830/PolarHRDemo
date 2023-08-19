@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,6 +14,7 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewDeviceInfo: TextView = itemView.findViewById(R.id.textViewDeviceInfo)
+        val buttonDeleteDevice: Button = itemView.findViewById(R.id.buttonDeleteDevice)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,6 +29,7 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
         holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  HeartRate: ${device.getLatestHeartRate()} \n" +
                 "HR Percentage: ${device.getLatestHRPercentage()}  HR Quantile: ${device.getLatestHRQuantile()}\n" +
                 "HRV: ${device.getLatestHRV()}"
+        holder.buttonDeleteDevice.tag = "${device.groupId},${device.deviceId}"
     }
 
     override fun getItemCount() = deviceList.size

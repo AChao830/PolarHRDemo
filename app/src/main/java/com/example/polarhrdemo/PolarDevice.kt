@@ -25,7 +25,7 @@ import jxl.write.Label
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 
-class PolarDevice (val deviceId: String, private val context: Context, private val testMode:Boolean) {
+class PolarDevice (val groupId:String, val deviceId: String, private val context: Context, private val testMode:Boolean) {
     /**
      * 设备类，处理大部分关于设备的事务
      * 数据的获取储存与输出

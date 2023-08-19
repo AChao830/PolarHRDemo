@@ -3,7 +3,6 @@ package com.example.polarhrdemo
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.polar.sdk.api.model.PolarHrData
-import com.polar.sdk.api.PolarBleApi
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.Disposable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDateTime
@@ -85,6 +80,15 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
     fun onClickAddDeviceButton (view: View) {
         val groupId = view.tag.toString()
         showDialogAddDevice(view, groupId)
+    }
+
+    // 处理点击删除设备按钮事务
+    // TODO: 有个bug，只能从底下删
+    fun onClickDeleteDeviceButton(view: View) {
+        val groupId = view.tag.toString().split(",")[0]
+        val deviceId = view.tag.toString().split(",")[1]
+        polarDeviceGroupList.find { it.groupId == groupId }?.deleteDevice(deviceId)
+        polarDeviceGroupAdapter.updateData()
     }
 
     // 处理点击输出组数据按钮事务
@@ -169,7 +173,7 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
             deviceId = input.text.toString().uppercase()
             val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
             if (polarDeviceGroup != null) {
-                val newDevice = PolarDevice(deviceId, applicationContext, testMode)
+                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
                 newDevice.connectToDevice() // 开始连接
                 newDevice.setUpdateCallback(this) // 设置更新callback
                 polarDeviceGroup.addDevice(newDevice)

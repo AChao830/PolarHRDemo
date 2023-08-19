@@ -16,7 +16,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
+            android:tag="1"
             android:text="123456"/>
+
+        <Button
+            android:id="@+id/buttonDeleteDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickDeleteDeviceButton"
+            android:tag="1"
+            android:text="@string/delete_device_button" />
 
     </LinearLayout>
 
