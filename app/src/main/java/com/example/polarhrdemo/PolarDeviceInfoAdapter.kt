@@ -26,9 +26,9 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = deviceList[position]
-        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  HeartRate: ${device.getLatestHeartRate()} \n" +
-                "HR Percentage: ${device.getLatestHRPercentage()}  HR Quantile: ${device.getLatestHRQuantile()}\n" +
-                "HRV: ${device.getLatestHRV()}"
+        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  Battery: ${device.getLatestBattery()}\n" +
+                "HeartRate: ${device.getLatestHeartRate()} HR Percentage: ${device.getLatestHRPercentage()} HR Quantile: ${device.getLatestHRQuantile()}\n" +
+                "SDRR: ${device.getLatestSDRR()} pNN50: ${device.getLatestpNN50()} RMSSD: ${device.getLatestRMSSD()}"
         holder.buttonDeleteDevice.tag = "${device.groupId},${device.deviceId}"
     }
 

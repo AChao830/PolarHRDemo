@@ -1,11 +1,9 @@
 package com.example.polarhrdemo
 
 import android.content.Context
-import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.polar.sdk.api.PolarBleApi
 import com.polar.sdk.api.PolarBleApiCallback
 import com.polar.sdk.api.PolarBleApiDefaultImpl.defaultImplementation
@@ -24,6 +22,7 @@ import jxl.Workbook
 import jxl.write.Label
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
+import kotlin.math.sqrt
 
 class PolarDevice (val groupId:String, val deviceId: String, private val context: Context, private val testMode:Boolean) {
     /**
@@ -42,9 +41,11 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     private var latestHeartRate = "0" // 储存最新的心率，用于数据的展示
     private var latestHRPercentage = "0" // 储存最新的心率百分比，用于数据的展示
     private var latestHRQuantile = "0" // 储存最新的心率分位点，用于数据的展示
-    private var latestHRV = "0"
+    private var latestSDRR = "0"
+    private var latestpNN50 = "0"
+    private var latestRMSSD = "0"
     lateinit var fwVersion: String // 储存fw版本
-    lateinit var battery: String // 储存电量
+    private var battery: String = "0" // 储存电量
 
     private var rrList = mutableListOf<Double>() // 列表储存RR数据
 
@@ -71,7 +72,9 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val hr: Int, // 心率
         val hrPercentage: Float = 0.0F, // 储存心率离最大心率百分比
         val hrQuantile: Int = 0, // 心率与最大心率的分位点
-        val HRV: Double?, // HRV
+        val SDRR: Double?, // SDRR
+        val pNN50: Double?, // pNN50
+        val RMSSD: Double?, // RMSSD
         val period: Int? // 区间
     )
 
@@ -143,7 +146,9 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
 
         val newHrPercentage: Float = (polarData.hr.toFloat() / Settings.maxHeartRate.toFloat()) * 100
         val newHrQuantile: Int = if (newHrPercentage > 100 ) { 6 } else { ((newHrPercentage / 20) + 1).toInt() }
-        var newHRV: Double = -1.0
+        var newSDRR: Double = -1.0
+        var newpNN50: Double = -1.0
+        var newRMSSD: Double = -1.0
         if (polarData.rrAvailable) {
             // 先判断有没有
             rrAvailable = true
@@ -152,22 +157,30 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             }
         }
         if (rrList.size >= 2) {
-            newHRV = calculateVariance(rrList)
-            latestHRV = "%.2f".format(newHRV)
+            newSDRR = calculateSDRR(rrList)
+            newpNN50 = calculatepNN50(rrList)
+            newRMSSD = calculateRMSSD(rrList)
+            latestSDRR = "%.2f".format(newSDRR)
+            latestpNN50 = "%.2f".format(newpNN50) + "%"
+            latestRMSSD = "%.2f".format(newRMSSD)
         }
         // 更新数据
         latestHeartRate = polarData.hr.toString()
-        latestHRPercentage = "%.1f".format(newHrPercentage) + "%"
+        latestHRPercentage = "%.2f".format(newHrPercentage) + "%"
         latestHRQuantile = newHrQuantile.toString()
         if (isRecord) {
-            val newHRVValue = if (rrAvailable) newHRV else null
+            val newSDRRValue = if (rrAvailable) newSDRR else null
+            val newpNN50Value = if (rrAvailable) newpNN50 else null
+            val newRMSSDValue = if (rrAvailable) newRMSSD else null
             val newPeriodValue = if (isPeriod) period else null
             val tempData = DeviceData(
                 formattedDateTime,
                 polarData.hr,
                 newHrPercentage,
                 newHrQuantile,
-                newHRVValue,
+                newSDRRValue,
+                newpNN50Value,
+                newRMSSDValue,
                 newPeriodValue
             )
             deviceDataList.add(0, tempData)
@@ -223,9 +236,24 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     fun getLatestHRQuantile(): String {
         return latestHRQuantile
     }
-    // 提供给recycleView使用，获取最新的HRV(SDNN方法)
-    fun getLatestHRV(): String {
-        return latestHRV
+    // 提供给recycleView使用，获取最新的SDRR
+    fun getLatestSDRR(): String {
+        return latestSDRR
+    }
+
+    // 提供给recycleView使用，获取最新的pNN50
+    fun getLatestpNN50(): String {
+        return latestpNN50
+    }
+
+    // 提供给recycleView使用，获取最新的RMSSD
+    fun getLatestRMSSD(): String {
+        return latestRMSSD
+    }
+
+    // 提供给recycleView使用，获取最新的电池电量
+    fun getLatestBattery(): String {
+        return battery
     }
 
     // 开始监听
@@ -284,12 +312,12 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         // CSV头
         val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" +
-                "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,HeartRateVariability,Period\n"
+                "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,SDRR,pNN50,RMSSD,Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
         for (data in deviceDataList.reversed()) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
-            val csvLine = "${data.timestamp},${data.hr},${"%.1f".format(data.hrPercentage)},${data.hrQuantile},${"%.2f".format(data.HRV)},$periodValue\n"
+            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)},${data.hrQuantile},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)},${"%.2f".format(data.RMSSD)},$periodValue\n"
             csvContent.append(csvLine)
         }
         val csvData = csvContent.toString()
@@ -337,17 +365,21 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             sheet.addCell(Label(1, 1, "HeartRate"))
             sheet.addCell(Label(2, 1, "HeartRatePercentage"))
             sheet.addCell(Label(3, 1, "HeartRateQuantile"))
-            sheet.addCell(Label(4, 1, "HeartRateVariability"))
-            sheet.addCell(Label(5, 1, "Period"))
+            sheet.addCell(Label(4, 1, "SDRR"))
+            sheet.addCell(Label(5, 1, "pNN50"))
+            sheet.addCell(Label(6, 1, "RMSSD"))
+            sheet.addCell(Label(7, 1, "Period"))
 
             // Add data rows
             for ((index, data) in deviceDataList.reversed().withIndex()) {
                 sheet.addCell(Label(0, index + 2, data.timestamp.toString()))
                 sheet.addCell(Label(1, index + 2, data.hr.toString()))
-                sheet.addCell(Label(2, index + 2, "%.1f".format(data.hrPercentage)))
+                sheet.addCell(Label(2, index + 2, "%.2f".format(data.hrPercentage)))
                 sheet.addCell(Label(3, index + 2, data.hrQuantile.toString()))
-                sheet.addCell(Label(4, index + 2, "%.2f".format(data.HRV)))
-                sheet.addCell(Label(5, index + 2, data.period?.toString()))
+                sheet.addCell(Label(4, index + 2, "%.2f".format(data.SDRR)))
+                sheet.addCell(Label(5, index + 2, "%.2f".format(data.pNN50)))
+                sheet.addCell(Label(6, index + 2, "%.2f".format(data.RMSSD)))
+                sheet.addCell(Label(7, index + 2, data.period?.toString()))
             }
 
             // Write and close the workbook
@@ -362,11 +394,31 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         }
     }
 
-    // 计算方差
-    private fun calculateVariance(numbers: List<Double>): Double {
+    // 计算SDRR
+    private fun calculateSDRR(numbers: List<Double>): Double {
         val mean = numbers.average()
         val squaredDifferences = numbers.map { (it - mean) * (it - mean) }
-        return squaredDifferences.average()
+        val squaredSum = squaredDifferences.sum()
+        val variance = squaredSum / numbers.size
+        return sqrt(variance)
     }
+
+    // 计算pNN50
+    private fun calculatepNN50(numbers: List<Double>): Double {
+        val differences = numbers.zipWithNext { a, b -> b - a }
+        val n = differences.count{ it > 50.0 }
+        return (n.toDouble() / differences.size) * 100
+    }
+
+    // 计算RMSSD
+    private fun calculateRMSSD(numbers: List<Double>): Double {
+        val differences = numbers.zipWithNext { a, b -> b - a }
+        val mean = differences.average()
+        val squaredDifferences = differences.map { (it - mean) * (it - mean) }
+        val squaredSum = squaredDifferences.sum()
+        val variance = squaredSum / differences.size
+        return sqrt(variance)
+    }
+
 
 }
