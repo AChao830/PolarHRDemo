@@ -42,9 +42,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // 获取并读取设置
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
+        Settings.testMode = sharedPreferenceHelper.loadTestMode()
+        Settings.maxHeartRate = sharedPreferenceHelper.loadMaxHeartRate()
 
         // 检查蓝牙连接
         checkBT()
