@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity() {
         sharedPreferenceHelper = SharedPreferenceHelper(this)
         Settings.testMode = sharedPreferenceHelper.loadTestMode()
         Settings.maxHeartRate = sharedPreferenceHelper.loadMaxHeartRate()
+        Settings.zone1 = sharedPreferenceHelper.loadZone1()
+        Settings.zone2 = sharedPreferenceHelper.loadZone2()
+        Settings.zone3 = sharedPreferenceHelper.loadZone3()
+        Settings.zone4 = sharedPreferenceHelper.loadZone4()
+        Settings.zone5 = sharedPreferenceHelper.loadZone5()
+
 
         // 检查蓝牙连接
         checkBT()

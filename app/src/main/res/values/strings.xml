@@ -21,4 +21,5 @@
     <string name="record_status">Recording:False</string>
     <string name="period_status">Period:None</string>
     <string name="delete_device_button">Delete Device</string>
+    <string name="button_change_zone">Change Lower Boundaries</string>
 </resources>

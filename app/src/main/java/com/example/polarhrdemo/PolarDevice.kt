@@ -40,7 +40,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     private var deviceDataList = mutableListOf<DeviceData>() // 列表储存数据
     private var latestHeartRate = "0" // 储存最新的心率，用于数据的展示
     private var latestHRPercentage = "0" // 储存最新的心率百分比，用于数据的展示
-    private var latestHRQuantile = "0" // 储存最新的心率分位点，用于数据的展示
+    private var latestHRZone = "0" // 储存最新的心率分位点，用于数据的展示
     private var latestSDRR = "0"
     private var latestpNN50 = "0"
     private var latestRMSSD = "0"
@@ -71,7 +71,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val timestamp: String, // 时间戳
         val hr: Int, // 心率
         val hrPercentage: Float = 0.0F, // 储存心率离最大心率百分比
-        val hrQuantile: Int = 0, // 心率与最大心率的分位点
+        val hrZone: Int = 0, // 心率与最大心率的分位点
         val SDRR: Double?, // SDRR
         val pNN50: Double?, // pNN50
         val RMSSD: Double?, // RMSSD
@@ -145,7 +145,25 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val formattedDateTime = currentDateTime.format(formatter) // 格式化时间
 
         val newHrPercentage: Float = (polarData.hr.toFloat() / Settings.maxHeartRate.toFloat()) * 100
-        val newHrQuantile: Int = if (newHrPercentage > 100 ) { 6 } else { ((newHrPercentage / 20) + 1).toInt() }
+        var newHRZone = 0
+        if (newHrPercentage <= Settings.zone0) {
+            newHRZone = 0
+        } else if (newHrPercentage <= Settings.zone1) {
+            newHRZone = 0
+        } else if (newHrPercentage <= Settings.zone2) {
+            newHRZone = 1
+        } else if (newHrPercentage <= Settings.zone3) {
+            newHRZone = 2
+        } else if (newHrPercentage <= Settings.zone4) {
+            newHRZone = 3
+        } else if (newHrPercentage <= Settings.zone5) {
+            newHRZone = 4
+        } else if (newHrPercentage <= Settings.zone6) {
+            newHRZone = 5
+        } else {
+            newHRZone = 6
+        }
+
         var newSDRR: Double = -1.0
         var newpNN50: Double = -1.0
         var newRMSSD: Double = -1.0
@@ -167,7 +185,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         // 更新数据
         latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.2f".format(newHrPercentage) + "%"
-        latestHRQuantile = newHrQuantile.toString()
+        latestHRZone = newHRZone.toString()
         if (isRecord) {
             val newSDRRValue = if (rrAvailable) newSDRR else null
             val newpNN50Value = if (rrAvailable) newpNN50 else null
@@ -177,7 +195,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 formattedDateTime,
                 polarData.hr,
                 newHrPercentage,
-                newHrQuantile,
+                newHRZone,
                 newSDRRValue,
                 newpNN50Value,
                 newRMSSDValue,
@@ -233,8 +251,8 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         return latestHRPercentage
     }
     // 提供给recycleView使用，获取最新的心率
-    fun getLatestHRQuantile(): String {
-        return latestHRQuantile
+    fun getLatestHRZone(): String {
+        return latestHRZone
     }
     // 提供给recycleView使用，获取最新的SDRR
     fun getLatestSDRR(): String {
@@ -312,12 +330,12 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         // CSV头
         val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" +
-                "Timestamp,HeartRate,HeartRatePercentage,HeartRateQuantile,SDRR,pNN50,RMSSD,Period\n"
+                "Timestamp,HeartRate,HeartRatePercentage,HeartRateZone,SDRR,pNN50,RMSSD,Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
         for (data in deviceDataList.reversed()) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
-            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)},${data.hrQuantile},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)},${"%.2f".format(data.RMSSD)},$periodValue\n"
+            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)},${data.hrZone},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)},${"%.2f".format(data.RMSSD)},$periodValue\n"
             csvContent.append(csvLine)
         }
         val csvData = csvContent.toString()
@@ -364,7 +382,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             sheet.addCell(Label(0, 1, "Timestamp"))
             sheet.addCell(Label(1, 1, "HeartRate"))
             sheet.addCell(Label(2, 1, "HeartRatePercentage"))
-            sheet.addCell(Label(3, 1, "HeartRateQuantile"))
+            sheet.addCell(Label(3, 1, "HeartRateZone"))
             sheet.addCell(Label(4, 1, "SDRR"))
             sheet.addCell(Label(5, 1, "pNN50"))
             sheet.addCell(Label(6, 1, "RMSSD"))
@@ -375,7 +393,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 sheet.addCell(Label(0, index + 2, data.timestamp.toString()))
                 sheet.addCell(Label(1, index + 2, data.hr.toString()))
                 sheet.addCell(Label(2, index + 2, "%.2f".format(data.hrPercentage)))
-                sheet.addCell(Label(3, index + 2, data.hrQuantile.toString()))
+                sheet.addCell(Label(3, index + 2, data.hrZone.toString()))
                 sheet.addCell(Label(4, index + 2, "%.2f".format(data.SDRR)))
                 sheet.addCell(Label(5, index + 2, "%.2f".format(data.pNN50)))
                 sheet.addCell(Label(6, index + 2, "%.2f".format(data.RMSSD)))
