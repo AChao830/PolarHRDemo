@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.androidplot.util.PixelUtils
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -39,6 +40,8 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
         recyclerViewDeviceGroup.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         polarDeviceGroupAdapter = PolarDeviceGroupAdapter(polarDeviceGroupList)
         recyclerViewDeviceGroup.adapter = polarDeviceGroupAdapter
+
+        PixelUtils.init(this)
     }
 
     override fun onDestroy() {
@@ -53,7 +56,12 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
 
     // 更新页面数据
     override fun updateDeviceInfo() {
-        polarDeviceGroupAdapter.updateData()
+        runOnUiThread { polarDeviceGroupAdapter.updateData() }
+    }
+
+    // 更新页面数据
+    override fun updateGraph() {
+        runOnUiThread { polarDeviceGroupAdapter.updateData() }
     }
 
     // --------------------设备组管理--------------------
@@ -176,6 +184,7 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
                 val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
                 newDevice.connectToDevice() // 开始连接
                 newDevice.setUpdateCallback(this) // 设置更新callback
+                newDevice.setPlotterListener(this)
                 polarDeviceGroup.addDevice(newDevice)
                 polarDeviceGroupAdapter.updateData()
             }

@@ -8,6 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.androidplot.xy.BoundaryMode
+import com.androidplot.xy.StepMode
+import com.androidplot.xy.XYGraphWidget
+import com.androidplot.xy.XYPlot
+import java.text.DecimalFormat
 
 class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
     RecyclerView.Adapter<PolarDeviceInfoAdapter.ViewHolder>() {
@@ -15,6 +20,7 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewDeviceInfo: TextView = itemView.findViewById(R.id.textViewDeviceInfo)
         val buttonDeleteDevice: Button = itemView.findViewById(R.id.buttonDeleteDevice)
+        val plot: XYPlot = itemView.findViewById(R.id.hr_view_plot)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,8 +34,20 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
         val device = deviceList[position]
         holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  Battery: ${device.getLatestBattery()}\n" +
                 "HeartRate: ${device.getLatestHeartRate()} HR Percentage: ${device.getLatestHRPercentage()} HR Zone: ${device.getLatestHRZone()}\n" +
-                "SDRR: ${device.getLatestSDRR()} pNN50: ${device.getLatestpNN50()} RMSSD: ${device.getLatestRMSSD()}"
+                "SDRR: ${device.getLatestSDRR()} pNN50: ${device.getLatestpNN50()} RMSSD: ${device.getLatestRMSSD()}\n" +
+                "BanistersTRIMP: ${device.getlatestBanistersTRIMP()}"
         holder.buttonDeleteDevice.tag = "${device.groupId},${device.deviceId}"
+        holder.plot.addSeries(device.plotter.hrSeries, device.plotter.hrFormatter)
+        holder.plot.setRangeBoundaries(50, Settings.maxHeartRate, BoundaryMode.AUTO)
+        holder.plot.setDomainBoundaries(0, 360000, BoundaryMode.AUTO)
+        // Left labels will increment by 10
+        holder.plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 10.0)
+        holder.plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 60000.0)
+        // Make left labels be an integer (no decimal places)
+        holder.plot.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = DecimalFormat("#")
+        // These don't seem to have an effect
+        holder.plot.linesPerRangeLabel = 2
+
     }
 
     override fun getItemCount() = deviceList.size

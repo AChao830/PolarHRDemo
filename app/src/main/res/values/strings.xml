@@ -22,4 +22,6 @@
     <string name="period_status">Period:None</string>
     <string name="delete_device_button">Delete Device</string>
     <string name="button_change_zone">Change Lower Boundaries</string>
+    <string name="hr_range_title">HR, /sec</string>
+    <string name="hr_title">HR vs. Time (for 5 min)</string>
 </resources>

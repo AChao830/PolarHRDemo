@@ -19,6 +19,32 @@
             android:tag="1"
             android:text="123456"/>
 
+        <com.androidplot.xy.XYPlot
+            android:id="@+id/hr_view_plot"
+            style="@style/FullScreenGraph"
+            android:layout_width="fill_parent"
+            android:layout_height="204dp"
+            android:layout_marginTop="5dp"
+            app:backgroundColor="@color/colorAccent"
+            app:graphBackgroundColor="@color/colorAccent"
+            app:graphMarginBottom="12dp"
+            app:graphMarginLeft="30dp"
+            app:graphMarginRight="5dp"
+            app:graphMarginTop="20dp"
+            app:gridBackgroundColor="@color/colorAccent"
+            app:gridInsetLeft="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:lineLabels="left"
+            app:rangeTitle="@string/hr_range_title"
+            app:rangeTitleTextColor="@android:color/black"
+            app:rangeTitleTextSize="12dp"
+            app:renderMode="use_background_thread"
+            app:title="@string/hr_title"
+            app:titleTextColor="@android:color/black"
+            app:titleTextSize="15dp" />
+
         <Button
             android:id="@+id/buttonDeleteDevice"
             android:layout_width="wrap_content"

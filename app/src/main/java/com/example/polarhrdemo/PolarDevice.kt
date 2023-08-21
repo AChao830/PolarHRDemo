@@ -23,6 +23,7 @@ import jxl.write.Label
 import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 import kotlin.math.sqrt
+import kotlin.math.exp
 
 class PolarDevice (val groupId:String, val deviceId: String, private val context: Context, private val testMode:Boolean) {
     /**
@@ -44,13 +45,17 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     private var latestSDRR = "0"
     private var latestpNN50 = "0"
     private var latestRMSSD = "0"
+    private var latestBanistersTRIMP = "0"
     lateinit var fwVersion: String // 储存fw版本
     private var battery: String = "0" // 储存电量
 
     private var rrList = mutableListOf<Double>() // 列表储存RR数据
+    private val hrList = mutableListOf<Double>()
 
     private var updateCallback: UpdateCallback? = null
     private var testUtils = TestUtils()
+
+    val plotter = HRPlotter()
 
     // 定义时间格式
     private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
@@ -138,6 +143,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         updateCallback = callback
     }
 
+    fun setPlotterListener(callback: UpdateCallback) {
+        plotter.setListener(callback)
+    }
+
     // 添加数据，如果在区间内就把区间也纯存进来，否则为null
     private fun addValue(polarData: PolarHrData.PolarHrSample) {
         // 时间戳
@@ -167,6 +176,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         var newSDRR: Double = -1.0
         var newpNN50: Double = -1.0
         var newRMSSD: Double = -1.0
+        var newBanistersTRIMP: Double = -1.0
         if (polarData.rrAvailable) {
             // 先判断有没有
             rrAvailable = true
@@ -182,10 +192,12 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             latestpNN50 = "%.2f".format(newpNN50) + "%"
             latestRMSSD = "%.2f".format(newRMSSD)
         }
+        newBanistersTRIMP = calculateTRIMP("Banisters", Settings.sex)
         // 更新数据
         latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.2f".format(newHrPercentage) + "%"
         latestHRZone = newHRZone.toString()
+        latestBanistersTRIMP = "%.2f".format(newBanistersTRIMP)
         if (isRecord) {
             val newSDRRValue = if (rrAvailable) newSDRR else null
             val newpNN50Value = if (rrAvailable) newpNN50 else null
@@ -203,6 +215,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             )
             deviceDataList.add(0, tempData)
         }
+        hrList.add(0, polarData.hr.toDouble())
     }
 
     // 连接设备
@@ -258,6 +271,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     fun getLatestSDRR(): String {
         return latestSDRR
     }
+    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    fun getlatestBanistersTRIMP(): String {
+        return latestBanistersTRIMP
+    }
 
     // 提供给recycleView使用，获取最新的pNN50
     fun getLatestpNN50(): String {
@@ -288,6 +305,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                         { hrData: PolarHrData ->
                             for (sample in hrData.samples) {
                                 addValue(sample)
+                                plotter.addValues(sample)
                                 updateCallback?.updateDeviceInfo()
                             }
                         },
@@ -303,6 +321,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                         { hrData: PolarHrData ->
                             for (sample in hrData.samples) {
                                 addValue(sample)
+                                plotter.addValues(sample)
                                 updateCallback?.updateDeviceInfo()
                             }
                         },
@@ -438,5 +457,26 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         return sqrt(variance)
     }
 
+    // 计算TRIMP
+    private fun calculateTRIMP(method: String, sex: String): Double {
+        val t:Double = 1.0/60.0
+        if (method == "Banisters") {
+            val deltaHr = (hrList.average() - Settings.restHeartRate) / (Settings.maxHeartRate - Settings.restHeartRate)
+            return if (sex == "Male") {
+                val y = 0.64 * exp(1.92) * deltaHr
+                t*hrList.size*deltaHr*y
+            } else {
+                val y = 0.86 * exp(1.67) * deltaHr
+                t*hrList.size*deltaHr*y
+            }
+        }
+        return 0.0
+    }
+
+    // 底部提示信息条
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+        toast.show()
+    }
 
 }
