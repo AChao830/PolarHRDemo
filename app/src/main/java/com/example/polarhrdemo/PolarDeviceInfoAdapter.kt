@@ -35,7 +35,8 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
         holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  Battery: ${device.getLatestBattery()}\n" +
                 "HeartRate: ${device.getLatestHeartRate()} HR Percentage: ${device.getLatestHRPercentage()} HR Zone: ${device.getLatestHRZone()}\n" +
                 "SDRR: ${device.getLatestSDRR()} pNN50: ${device.getLatestpNN50()} RMSSD: ${device.getLatestRMSSD()}\n" +
-                "BanistersTRIMP: ${device.getlatestBanistersTRIMP()}"
+                "BanistersTRIMP: ${device.getLatestBanistersTRIMP()}, EdwardsTRIMP: ${device.getLatestEdwardsTRIMP()}\n" +
+                "LucaisTRIMP: ${device.getLatestLuciasTRIMP()}, StangosTRIMP: ${device.getLatestStangosTRIMP()}"
         holder.buttonDeleteDevice.tag = "${device.groupId},${device.deviceId}"
         holder.plot.addSeries(device.plotter.hrSeries, device.plotter.hrFormatter)
         holder.plot.setRangeBoundaries(50, Settings.maxHeartRate, BoundaryMode.AUTO)

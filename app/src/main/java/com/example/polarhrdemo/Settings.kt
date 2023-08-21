@@ -17,4 +17,7 @@ object Settings {
     var zone6: Int = 100 // unchangeable
 
     var sex: String = "Male"
+
+    var LT1: Int = 88 // LT1阈值
+    var LT2: Int = 92 // LT2阈值
 }

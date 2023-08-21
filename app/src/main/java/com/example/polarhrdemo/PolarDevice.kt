@@ -46,11 +46,15 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     private var latestpNN50 = "0"
     private var latestRMSSD = "0"
     private var latestBanistersTRIMP = "0"
+    private var latestEdwardsTRIMP = "0"
+    private var latestLuciasTRIMP = "0"
+    private var latestStangosTRIMP = "0"
     lateinit var fwVersion: String // 储存fw版本
     private var battery: String = "0" // 储存电量
 
     private var rrList = mutableListOf<Double>() // 列表储存RR数据
-    private val hrList = mutableListOf<Double>()
+    private var hrList = mutableListOf<Double>() // 列表储存HR数据
+    private var hrPercentageList = mutableListOf<Double>() // 列表储存HR百分比数据
 
     private var updateCallback: UpdateCallback? = null
     private var testUtils = TestUtils()
@@ -80,6 +84,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val SDRR: Double?, // SDRR
         val pNN50: Double?, // pNN50
         val RMSSD: Double?, // RMSSD
+        val BanistersTRIMP: Double,
+        val EdwardsTRIMP: Double,
+        val LuciasTRIMP: Double,
+        val StangosTRIMP: Double,
         val period: Int? // 区间
     )
 
@@ -176,7 +184,6 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         var newSDRR: Double = -1.0
         var newpNN50: Double = -1.0
         var newRMSSD: Double = -1.0
-        var newBanistersTRIMP: Double = -1.0
         if (polarData.rrAvailable) {
             // 先判断有没有
             rrAvailable = true
@@ -192,12 +199,18 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             latestpNN50 = "%.2f".format(newpNN50) + "%"
             latestRMSSD = "%.2f".format(newRMSSD)
         }
-        newBanistersTRIMP = calculateTRIMP("Banisters", Settings.sex)
+        val newBanistersTRIMP: Double = calculateTRIMP("Banisters", Settings.sex)
+        val newEdwardsTRIMP: Double = calculateTRIMP("Edwards", Settings.sex)
+        val newLuciasTRIMP: Double = calculateTRIMP("Lucias", Settings.sex)
+        val newStangosTRIMP: Double = calculateTRIMP("Stangos", Settings.sex)
         // 更新数据
         latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.2f".format(newHrPercentage) + "%"
         latestHRZone = newHRZone.toString()
         latestBanistersTRIMP = "%.2f".format(newBanistersTRIMP)
+        latestEdwardsTRIMP = "%.2f".format(newEdwardsTRIMP)
+        latestLuciasTRIMP = "%.2f".format(newLuciasTRIMP)
+        latestStangosTRIMP = "%.2f".format(newStangosTRIMP)
         if (isRecord) {
             val newSDRRValue = if (rrAvailable) newSDRR else null
             val newpNN50Value = if (rrAvailable) newpNN50 else null
@@ -211,11 +224,16 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 newSDRRValue,
                 newpNN50Value,
                 newRMSSDValue,
+                newBanistersTRIMP,
+                newEdwardsTRIMP,
+                newLuciasTRIMP,
+                newStangosTRIMP,
                 newPeriodValue
             )
             deviceDataList.add(0, tempData)
         }
         hrList.add(0, polarData.hr.toDouble())
+        hrPercentageList.add(0, newHrPercentage.toDouble())
     }
 
     // 连接设备
@@ -271,10 +289,6 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     fun getLatestSDRR(): String {
         return latestSDRR
     }
-    // 提供给recycleView使用，获取最新的BanistersTRIMP
-    fun getlatestBanistersTRIMP(): String {
-        return latestBanistersTRIMP
-    }
 
     // 提供给recycleView使用，获取最新的pNN50
     fun getLatestpNN50(): String {
@@ -289,6 +303,26 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     // 提供给recycleView使用，获取最新的电池电量
     fun getLatestBattery(): String {
         return battery
+    }
+
+    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    fun getLatestBanistersTRIMP(): String {
+        return latestBanistersTRIMP
+    }
+
+    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    fun getLatestEdwardsTRIMP(): String {
+        return latestEdwardsTRIMP
+    }
+
+    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    fun getLatestLuciasTRIMP(): String {
+        return latestLuciasTRIMP
+    }
+
+    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    fun getLatestStangosTRIMP(): String {
+        return latestStangosTRIMP
     }
 
     // 开始监听
@@ -349,12 +383,17 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         // CSV头
         val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" +
-                "Timestamp,HeartRate,HeartRatePercentage,HeartRateZone,SDRR,pNN50,RMSSD,Period\n"
+                "Timestamp,HeartRate,HeartRatePercentage,HeartRateZone,SDRR,pNN50,RMSSD," +
+                "BanistersTRIMP,EdwardsTRIMP,LuciasTRIMP,StangosTRIMP,Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
         for (data in deviceDataList.reversed()) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
-            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)},${data.hrZone},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)},${"%.2f".format(data.RMSSD)},$periodValue\n"
+            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)}," +
+                    "${data.hrZone},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)}," +
+                    "${"%.2f".format(data.RMSSD)},${"%.2f".format(data.BanistersTRIMP)}," +
+                    "${"%.2f".format(data.EdwardsTRIMP)},${"%.2f".format(data.LuciasTRIMP)}," +
+                    "${"%.2f".format(data.StangosTRIMP)},$periodValue\n"
             csvContent.append(csvLine)
         }
         val csvData = csvContent.toString()
@@ -405,7 +444,11 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             sheet.addCell(Label(4, 1, "SDRR"))
             sheet.addCell(Label(5, 1, "pNN50"))
             sheet.addCell(Label(6, 1, "RMSSD"))
-            sheet.addCell(Label(7, 1, "Period"))
+            sheet.addCell(Label(7, 1, "BanistersTRIMP"))
+            sheet.addCell(Label(8, 1, "EdwardsTRIMP"))
+            sheet.addCell(Label(9, 1, "LuciasTRIMP"))
+            sheet.addCell(Label(10, 1, "StangosTRIMP"))
+            sheet.addCell(Label(11, 1, "Period"))
 
             // Add data rows
             for ((index, data) in deviceDataList.reversed().withIndex()) {
@@ -416,7 +459,11 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 sheet.addCell(Label(4, index + 2, "%.2f".format(data.SDRR)))
                 sheet.addCell(Label(5, index + 2, "%.2f".format(data.pNN50)))
                 sheet.addCell(Label(6, index + 2, "%.2f".format(data.RMSSD)))
-                sheet.addCell(Label(7, index + 2, data.period?.toString()))
+                sheet.addCell(Label(7, index + 2, "%.2f".format(data.BanistersTRIMP)))
+                sheet.addCell(Label(8, index + 2, "%.2f".format(data.EdwardsTRIMP)))
+                sheet.addCell(Label(9, index + 2, "%.2f".format(data.LuciasTRIMP)))
+                sheet.addCell(Label(10, index + 2, "%.2f".format(data.StangosTRIMP)))
+                sheet.addCell(Label(11, index + 2, data.period?.toString()))
             }
 
             // Write and close the workbook
@@ -469,6 +516,23 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 val y = 0.86 * exp(1.67) * deltaHr
                 t*hrList.size*deltaHr*y
             }
+        } else if (method == "Edwards") {
+            return (1.0*t*hrPercentageList.count { it >= 50 && it < 60 }) +
+                    (2.0*t*hrPercentageList.count { it >= 60 && it < 70 }) +
+                    (3.0*t*hrPercentageList.count { it >= 70 && it < 80 }) +
+                    (4.0*t*hrPercentageList.count { it >= 80 && it < 90 }) +
+                    (5.0*t*hrPercentageList.count { it >= 90})
+
+        } else if (method == "Lucias") {
+            return (1.0*t*hrPercentageList.count { it < Settings.LT1}) +
+                    (2.0*t*hrPercentageList.count { it >= Settings.LT1 && it <= Settings.LT2 }) +
+                    (3.0*t*hrPercentageList.count { it >Settings.LT2 })
+        } else if (method == "Stangos") {
+            return (1.25*t*hrPercentageList.count { it > 65 && it <= 71 }) +
+                    (1.71*t*hrPercentageList.count { it > 71 && it <= 78 }) +
+                    (2.54*t*hrPercentageList.count { it > 78 && it <= 85 }) +
+                    (3.61*t*hrPercentageList.count { it > 85 && it <= 92 }) +
+                    (5.16*t*hrPercentageList.count { it > 92})
         }
         return 0.0
     }
