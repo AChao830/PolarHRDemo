@@ -513,9 +513,85 @@ class HRVSettingActivity: AppCompatActivity() {
         private const val TAG = "HRVSettingActivity"
     }
 
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hrv_settings)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
+
+        val showHRVSwitch: SwitchCompat = findViewById(R.id.switchShowHRV)
+        showHRVSwitch.isChecked = Settings.showHRV // 初始化开关的状态
+        showHRVSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowHRVSwitch(isChecked)
+        }
+
+        val showSDRRSwitch: SwitchCompat = findViewById(R.id.switchShowSDRR)
+        showSDRRSwitch.isChecked = Settings.showSDRR // 初始化开关的状态
+        showSDRRSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowSDRRSwitch(isChecked)
+        }
+
+        val showpNN50Switch: SwitchCompat = findViewById(R.id.switchShowpNN50)
+        showpNN50Switch.isChecked = Settings.showpNN50 // 初始化开关的状态
+        showpNN50Switch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowpNN50Switch(isChecked)
+        }
+
+        val showRMSSDSwitch: SwitchCompat = findViewById(R.id.switchShowRMSSD)
+        showRMSSDSwitch.isChecked = Settings.showRMSSD // 初始化开关的状态
+        showRMSSDSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowRMSSDSwitch(isChecked)
+        }
+    }
+
+    private fun onCheckedChangeShowHRVSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showHRV = true
+            sharedPreferenceHelper.saveShowHRV(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showHRV = false
+            sharedPreferenceHelper.saveShowHRV(false)
+        }
+    }
+
+    private fun onCheckedChangeShowSDRRSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showSDRR = true
+            sharedPreferenceHelper.saveShowSDRR(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showSDRR = false
+            sharedPreferenceHelper.saveShowSDRR(false)
+        }
+    }
+
+    private fun onCheckedChangeShowpNN50Switch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showpNN50 = true
+            sharedPreferenceHelper.saveShowpNN50(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showpNN50 = false
+            sharedPreferenceHelper.saveShowpNN50(false)
+        }
+    }
+
+    private fun onCheckedChangeShowRMSSDSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showRMSSD = true
+            sharedPreferenceHelper.saveShowRMSSD(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showRMSSD = false
+            sharedPreferenceHelper.saveShowRMSSD(false)
+        }
     }
 }
 
@@ -524,8 +600,102 @@ class TRIMPSettingActivity: AppCompatActivity() {
         private const val TAG = "TRIMPSettingActivity"
     }
 
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trimp_settings)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
+
+        val showTRIMPSwitch: SwitchCompat = findViewById(R.id.switchShowTRIMP)
+        showTRIMPSwitch.isChecked = Settings.showTRIMP // 初始化开关的状态
+        showTRIMPSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowTRIMPSwitch(isChecked)
+        }
+
+        val showBanisterSwitch: SwitchCompat = findViewById(R.id.switchShowBanister)
+        showBanisterSwitch.isChecked = Settings.showBanister // 初始化开关的状态
+        showBanisterSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowBanisterSwitch(isChecked)
+        }
+
+        val showEdwardSwitch: SwitchCompat = findViewById(R.id.switchShowEdward)
+        showEdwardSwitch.isChecked = Settings.showEdward // 初始化开关的状态
+        showEdwardSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowEdwardSwitch(isChecked)
+        }
+
+        val showLuciaSwitch: SwitchCompat = findViewById(R.id.switchShowLucia)
+        showLuciaSwitch.isChecked = Settings.showLucia // 初始化开关的状态
+        showLuciaSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowLuciaSwitch(isChecked)
+        }
+
+        val showStangoSwitch: SwitchCompat = findViewById(R.id.switchShowStango)
+        showStangoSwitch.isChecked = Settings.showStango // 初始化开关的状态
+        showStangoSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowStangoSwitch(isChecked)
+        }
+    }
+
+    private fun onCheckedChangeShowTRIMPSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showTRIMP = true
+            sharedPreferenceHelper.saveShowTRIMP(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showTRIMP = false
+            sharedPreferenceHelper.saveShowTRIMP(false)
+        }
+    }
+
+    private fun onCheckedChangeShowBanisterSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showBanister = true
+            sharedPreferenceHelper.saveShowBanister(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showBanister = false
+            sharedPreferenceHelper.saveShowBanister(false)
+        }
+    }
+
+    private fun onCheckedChangeShowEdwardSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showEdward = true
+            sharedPreferenceHelper.saveShowEdward(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showEdward = false
+            sharedPreferenceHelper.saveShowEdward(false)
+        }
+    }
+
+    private fun onCheckedChangeShowLuciaSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showLucia = true
+            sharedPreferenceHelper.saveShowLucia(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showLucia = false
+            sharedPreferenceHelper.saveShowLucia(false)
+        }
+    }
+
+    private fun onCheckedChangeShowStangoSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showStango = true
+            sharedPreferenceHelper.saveShowStango(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showStango = false
+            sharedPreferenceHelper.saveShowStango(false)
+        }
     }
 }
