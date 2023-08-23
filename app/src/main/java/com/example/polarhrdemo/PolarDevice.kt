@@ -199,10 +199,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             latestpNN50 = "%.2f".format(newpNN50) + "%"
             latestRMSSD = "%.2f".format(newRMSSD)
         }
-        val newBanistersTRIMP: Double = calculateTRIMP("Banisters", Settings.sex)
-        val newEdwardsTRIMP: Double = calculateTRIMP("Edwards", Settings.sex)
-        val newLuciasTRIMP: Double = calculateTRIMP("Lucias", Settings.sex)
-        val newStangosTRIMP: Double = calculateTRIMP("Stangos", Settings.sex)
+        val newBanistersTRIMP: Double = calculateTRIMP("Banisters", Settings.gender)
+        val newEdwardsTRIMP: Double = calculateTRIMP("Edwards", Settings.gender)
+        val newLuciasTRIMP: Double = calculateTRIMP("Lucias", Settings.gender)
+        val newStangosTRIMP: Double = calculateTRIMP("Stangos", Settings.gender)
         // 更新数据
         latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.2f".format(newHrPercentage) + "%"

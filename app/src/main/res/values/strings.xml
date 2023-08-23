@@ -24,4 +24,8 @@
     <string name="button_change_zone">Change Lower Boundaries</string>
     <string name="hr_range_title">HR, /sec</string>
     <string name="hr_title">HR vs. Time (for 5 min)</string>
+    <string name="button_zone_settings">Zone Settings</string>
+    <string name="button_hr_settings">HeartRate Settings</string>
+    <string name="button_hrv_settings">HRV Settings</string>
+    <string name="button_trimp_settings">TRIMP Settings</string>
 </resources>

@@ -15,7 +15,7 @@ object Settings {
     var zone4: Int = 80
     var zone5: Int = 90
     var zone6: Int = 100 // unchangeable
-    var sex: String = "Male"
+    var gender: String = "Male"
     var LT1: Int = 88 // LT1阈值
     var LT2: Int = 92 // LT2阈值
     // HR控制展示与记录

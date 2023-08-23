@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         sharedPreferenceHelper = SharedPreferenceHelper(this)
         Settings.testMode = sharedPreferenceHelper.loadTestMode()
         Settings.maxHeartRate = sharedPreferenceHelper.loadMaxHeartRate()
+        Settings.restHeartRate = sharedPreferenceHelper.loadRestHeartRate()
+        Settings.gender = sharedPreferenceHelper.loadGender()
         Settings.zone1 = sharedPreferenceHelper.loadZone1()
         Settings.zone2 = sharedPreferenceHelper.loadZone2()
         Settings.zone3 = sharedPreferenceHelper.loadZone3()

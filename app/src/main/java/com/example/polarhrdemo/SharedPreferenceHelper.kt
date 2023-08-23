@@ -21,6 +21,22 @@ class SharedPreferenceHelper(context: Context) {
         return sharedPreferences.getInt("maxHeartRate", 200)
     }
 
+    fun saveRestHeartRate (restHeartRate: Int) {
+        sharedPreferences.edit().putInt("restHeartRate", restHeartRate).apply()
+    }
+
+    fun loadRestHeartRate(): Int {
+        return sharedPreferences.getInt("restHeartRate", 60)
+    }
+
+    fun saveGender (gender: String) {
+        sharedPreferences.edit().putString("gender", gender).apply()
+    }
+
+    fun loadGender(): String {
+        return sharedPreferences.getString("gender", "Male")?: "Male"
+    }
+
     fun saveZone1(zone1: Int) {
         sharedPreferences.edit().putInt("zone1", zone1).apply()
     }

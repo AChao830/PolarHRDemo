@@ -3,6 +3,7 @@ package com.example.polarhrdemo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.text.InputType
 import android.view.LayoutInflater
@@ -14,23 +15,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SettingActivity: AppCompatActivity() {
-
     companion object {
         private const val TAG = "SettingActivity"
     }
 
     private lateinit var textViewMaxHR: TextView
+    private lateinit var textViewRestHR: TextView
+    private lateinit var textViewGender: TextView
     private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-
-    private lateinit var textViewZone0: TextView
-    private lateinit var textViewZone1: TextView
-    private lateinit var textViewZone2: TextView
-    private lateinit var textViewZone3: TextView
-    private lateinit var textViewZone4: TextView
-    private lateinit var textViewZone5: TextView
-    private lateinit var textViewZone6: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +42,195 @@ class SettingActivity: AppCompatActivity() {
 
         textViewMaxHR = findViewById(R.id.textViewMaxHeartRate)
         textViewMaxHR.text = "MAX HEART RATE: ${Settings.maxHeartRate}"
-
         val buttonChangeMaxHR: Button = findViewById(R.id.buttonChangeMaxHeartRate)
         buttonChangeMaxHR.setOnClickListener {
             onClickChangeMaxHRButton(it)
         }
+
+        textViewRestHR = findViewById(R.id.textViewRestHeartRate)
+        textViewRestHR.text = "REST HEART RATE: ${Settings.restHeartRate}"
+        val buttonChangeRestHR: Button = findViewById(R.id.buttonChangeRestHeartRate)
+        buttonChangeRestHR.setOnClickListener{
+            onClickChangeRestHRButton(it)
+        }
+
+        textViewGender = findViewById(R.id.textViewGender)
+        textViewGender.text = "Gender: ${Settings.gender}"
+        val buttonChangeGender: Button = findViewById(R.id.buttonChangeGender)
+        buttonChangeGender.setOnClickListener{
+            onClickChangeGenderButton(it)
+        }
+
+        val buttonZoneSettings: Button = findViewById(R.id.buttonZoneSettings)
+        buttonZoneSettings.setOnClickListener {
+            onClickZoneSettingsButton(it)
+        }
+
+        val buttonHRSettings: Button = findViewById(R.id.buttonHRSettings)
+        buttonHRSettings.setOnClickListener {
+            onClickHRSettingsButton(it)
+        }
+
+        val buttonHRVSettings: Button = findViewById(R.id.buttonHRVSettings)
+        buttonHRVSettings.setOnClickListener {
+            onClickHRVSettingsButton(it)
+        }
+
+        val buttonTRIMPSettings: Button = findViewById(R.id.buttonTRIMPSettings)
+        buttonTRIMPSettings.setOnClickListener {
+            onClickTRIMPSettingsButton(it)
+        }
+
+    }
+
+    // 处理test mode开关事务逻辑
+    private fun onCheckedChangeTestModeSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.testMode = true
+            showToast("Test Mode is on")
+            sharedPreferenceHelper.saveTestMode(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.testMode = false
+            showToast("Test Mode is off")
+            sharedPreferenceHelper.saveTestMode(false)
+        }
+    }
+
+    // 处理改变最大心率按钮事务逻辑
+    private fun onClickChangeMaxHRButton(view: View){
+        showChangeMaxHRDialog(view)
+    }
+
+    private fun showChangeMaxHRDialog(view: View){
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new max heart rate")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.max_hr_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_max_hr)
+        input.setText(Settings.maxHeartRate.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newMaxHR = input.text.toString().toIntOrNull()
+            if (newMaxHR != null) {
+                Settings.maxHeartRate = newMaxHR
+                textViewMaxHR.text = "MAX HEART RATE: ${Settings.maxHeartRate}"
+                sharedPreferenceHelper.saveMaxHeartRate(newMaxHR)
+                showToast("Changed max heart rate to $newMaxHR")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // 处理改变休息心率按钮事务逻辑
+    private fun onClickChangeRestHRButton(view: View){
+        showChangeRestHRDialog(view)
+    }
+
+    private fun showChangeRestHRDialog(view: View){
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new rest heart rate")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.max_hr_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_max_hr)
+        input.setText(Settings.restHeartRate.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newRestHR = input.text.toString().toIntOrNull()
+            if (newRestHR != null) {
+                Settings.restHeartRate = newRestHR
+                textViewRestHR.text = "REST HEART RATE: ${Settings.restHeartRate}"
+                sharedPreferenceHelper.saveRestHeartRate(newRestHR)
+                showToast("Changed rest heart rate to $newRestHR")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // 处理改变性别按钮事务逻辑
+    private fun onClickChangeGenderButton(view: View) {
+        val options = arrayOf("Male", "Female")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Gender")
+            .setSingleChoiceItems(options, -1) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        Settings.gender = "Male"
+                        textViewGender.text = "Gender: ${Settings.gender}"
+                        sharedPreferenceHelper.saveGender("Male")
+                        showToast("Change Gender to Male")
+                    }
+                    1 -> {
+                        Settings.gender = "Female"
+                        textViewGender.text = "Gender: ${Settings.gender}"
+                        sharedPreferenceHelper.saveGender("Female")
+                        showToast("Change Gender to Female")
+                    }
+                }
+            }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    // 处理zone settings按钮事务逻辑
+    private fun onClickZoneSettingsButton(view: View) {
+        val intent = Intent(this, ZoneSettingActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 处理hr settings按钮事务逻辑
+    private fun onClickHRSettingsButton(view: View) {
+        val intent = Intent(this, HRSettingActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 处理hrv settings按钮事务逻辑
+    private fun onClickHRVSettingsButton(view: View) {
+        val intent = Intent(this, HRVSettingActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 处理trimp settings按钮事务逻辑
+    private fun onClickTRIMPSettingsButton(view: View) {
+        val intent = Intent(this, TRIMPSettingActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 底部提示信息条
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG)
+        toast.show()
+    }
+}
+
+class ZoneSettingActivity: AppCompatActivity() {
+    companion object {
+        private const val TAG = "ZoneSettingActivity"
+    }
+
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
+    private lateinit var textViewZone0: TextView
+    private lateinit var textViewZone1: TextView
+    private lateinit var textViewZone2: TextView
+    private lateinit var textViewZone3: TextView
+    private lateinit var textViewZone4: TextView
+    private lateinit var textViewZone5: TextView
+    private lateinit var textViewZone6: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_zone_settings)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
         textViewZone0 = findViewById(R.id.textViewZone0)
         textViewZone0.text = "ZONE 0: 0% - ${Settings.zone1}%"
@@ -87,50 +267,6 @@ class SettingActivity: AppCompatActivity() {
         buttonChangeZone5.setOnClickListener {
             onClickChangeZone5(it)
         }
-
-    }
-
-    // 处理test mode开关事务逻辑
-    private fun onCheckedChangeTestModeSwitch(isChecked: Boolean) {
-        if (isChecked) {
-            // 当开关按钮被打开时执行的操作
-            Settings.testMode = true
-            showToast("Test Mode is on")
-            sharedPreferenceHelper.saveTestMode(true)
-        } else {
-            // 当开关按钮被关闭时执行的操作
-            Settings.testMode = false
-            showToast("Test Mode is off")
-            sharedPreferenceHelper.saveTestMode(false)
-        }
-    }
-
-    // 处理改变最大心率按钮事务逻辑
-    private fun onClickChangeMaxHRButton(view: View){
-        showChangeMaxHRDialog(view)
-    }
-
-    private fun showChangeMaxHRDialog(view: View){
-        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
-        dialog.setTitle("Enter new max heart rate")
-        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.device_id_input_dialog, view.rootView as ViewGroup, false)
-        val input = viewInflated.findViewById<EditText>(R.id.input_device_id)
-        input.setText(Settings.maxHeartRate.toString())
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        dialog.setView(viewInflated)
-        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
-            val newMaxHR = input.text.toString().toIntOrNull()
-            if (newMaxHR != null) {
-                Settings.maxHeartRate = newMaxHR
-                textViewMaxHR.text = "MAX HEART RATE: ${Settings.maxHeartRate}"
-                sharedPreferenceHelper.saveMaxHeartRate(newMaxHR)
-                showToast("Changed max heart rate to $newMaxHR")
-            } else {
-                showToast("Invalid input")
-            }
-        }
-        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
-        dialog.show()
     }
 
     // 处理改变zone1下界事务按钮
@@ -283,5 +419,37 @@ class SettingActivity: AppCompatActivity() {
         val toast = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG)
         toast.show()
     }
+}
 
+class HRSettingActivity: AppCompatActivity() {
+    companion object {
+        private const val TAG = "HRSettingActivity"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_hr_settings)
+    }
+}
+
+class HRVSettingActivity: AppCompatActivity() {
+    companion object {
+        private const val TAG = "HRVSettingActivity"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_hrv_settings)
+    }
+}
+
+class TRIMPSettingActivity: AppCompatActivity() {
+    companion object {
+        private const val TAG = "TRIMPSettingActivity"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_trimp_settings)
+    }
 }

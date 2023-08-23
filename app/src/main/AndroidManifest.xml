@@ -71,6 +71,30 @@
             android:label="PolarHRSetting"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".ZoneSettingActivity"
+            android:exported="false"
+            android:label="PolarHRSetting"
+            android:parentActivityName=".SettingActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".HRSettingActivity"
+            android:exported="false"
+            android:label="PolarHRSetting"
+            android:parentActivityName=".SettingActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".HRVSettingActivity"
+            android:exported="false"
+            android:label="PolarHRSetting"
+            android:parentActivityName=".SettingActivity"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".TRIMPSettingActivity"
+            android:exported="false"
+            android:label="PolarHRSetting"
+            android:parentActivityName=".SettingActivity"
+            android:screenOrientation="fullSensor" />
 
     </application>
 
