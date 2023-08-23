@@ -81,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
         val settingsButton: Button = findViewById(R.id.buttonSettings)
         settingsButton.setOnClickListener { onClickButtonSettings(it) }
+
+        val scanButton: Button = findViewById(R.id.buttonScan)
+        scanButton.setOnClickListener { onClickButtonScan(it) }
     }
 
     fun onClickButtonTest(view: View) {
@@ -99,6 +102,12 @@ class MainActivity : AppCompatActivity() {
     // 跳转至Settings页面
     private fun onClickButtonSettings(view: View) {
         val intent = Intent(this, SettingActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 跳转至扫描页面
+    private fun onClickButtonScan(view: View) {
+        val intent = Intent(this, ScanActivity::class.java)
         startActivity(intent)
     }
 

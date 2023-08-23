@@ -1,5 +1,6 @@
 package com.example.polarhrdemo
 
+import com.polar.sdk.api.model.PolarDeviceInfo
 import com.polar.sdk.api.model.PolarHrData
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
@@ -16,5 +17,18 @@ class TestUtils {
                 val sample = PolarHrData.PolarHrSample(hr, rrsMs, true, true, true)
                 PolarHrData(listOf(sample))
             }
+    }
+
+    fun createMockDeviceINfoObservable(): Observable<PolarDeviceInfo> {
+        return Observable.interval(1, TimeUnit.SECONDS)
+            .map {
+                val deviceId = "testDevice${Random.nextInt(1, 1000)}"
+                val address = "testAddress${Random.nextInt(1, 1000)}"
+                val rssi = 100
+                val name = "testName${Random.nextInt(1, 1000)}"
+                val isConnectable = true
+                PolarDeviceInfo(deviceId, address, rssi, name, isConnectable)
+            }
+            .take(3)
     }
 }

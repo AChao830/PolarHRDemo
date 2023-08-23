@@ -95,6 +95,12 @@
             android:label="PolarHRSetting"
             android:parentActivityName=".SettingActivity"
             android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".ScanActivity"
+            android:exported="false"
+            android:label="PolarHRScan"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="fullSensor" />
 
     </application>
 

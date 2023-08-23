@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="80dp"
         android:background="@color/colorPrimary"
         android:padding="8dp"
@@ -32,16 +33,37 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="20dp"
         android:background="@color/colorPrimary"
         android:padding="8dp"
         android:text="@string/hr_button"
         android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSettings"
+        app:layout_constraintBottom_toTopOf="@+id/buttonScan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonTest"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/buttonScan"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        android:text="@string/scan_page_button"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHr"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
@@ -51,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="210dp"
         android:background="@color/colorPrimary"
         android:padding="8dp"
@@ -60,7 +83,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonHr"
+        app:layout_constraintTop_toBottomOf="@+id/buttonScan"
         app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
