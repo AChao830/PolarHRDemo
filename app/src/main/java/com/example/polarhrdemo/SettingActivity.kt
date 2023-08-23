@@ -305,7 +305,7 @@ class ZoneSettingActivity: AppCompatActivity() {
 
     private fun showChangeZone2Dialog(view: View){
         val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
-        dialog.setTitle("Enter new zone1 lower boundary ")
+        dialog.setTitle("Enter new zone2 lower boundary ")
         val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
         val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
         input.setText(Settings.zone2.toString())
@@ -334,7 +334,7 @@ class ZoneSettingActivity: AppCompatActivity() {
 
     private fun showChangeZone3Dialog(view: View){
         val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
-        dialog.setTitle("Enter new zone1 lower boundary ")
+        dialog.setTitle("Enter new zone3 lower boundary ")
         val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
         val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
         input.setText(Settings.zone3.toString())
@@ -363,7 +363,7 @@ class ZoneSettingActivity: AppCompatActivity() {
 
     private fun showChangeZone4Dialog(view: View){
         val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
-        dialog.setTitle("Enter new zone1 lower boundary ")
+        dialog.setTitle("Enter new zone4 lower boundary ")
         val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
         val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
         input.setText(Settings.zone4.toString())
@@ -392,7 +392,7 @@ class ZoneSettingActivity: AppCompatActivity() {
 
     private fun showChangeZone5Dialog(view: View){
         val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
-        dialog.setTitle("Enter new zone1 lower boundary ")
+        dialog.setTitle("Enter new zone5 lower boundary ")
         val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
         val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
         input.setText(Settings.zone5.toString())
