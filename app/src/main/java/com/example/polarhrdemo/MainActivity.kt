@@ -59,7 +59,19 @@ class MainActivity : AppCompatActivity() {
         Settings.zone3 = sharedPreferenceHelper.loadZone3()
         Settings.zone4 = sharedPreferenceHelper.loadZone4()
         Settings.zone5 = sharedPreferenceHelper.loadZone5()
-
+        Settings.showHR = sharedPreferenceHelper.loadShowHR()
+        Settings.showHeartRate = sharedPreferenceHelper.loadShowHeartRate()
+        Settings.showHRPercentage = sharedPreferenceHelper.loadShowHRPercentage()
+        Settings.showHRZone = sharedPreferenceHelper.loadShowHRZone()
+        Settings.showHRV = sharedPreferenceHelper.loadShowHRV()
+        Settings.showSDRR = sharedPreferenceHelper.loadShowSDRR()
+        Settings.showpNN50 = sharedPreferenceHelper.loadShowpNN50()
+        Settings.showRMSSD = sharedPreferenceHelper.loadShowRMSSD()
+        Settings.showTRIMP = sharedPreferenceHelper.loadShowTRIMP()
+        Settings.showBanister = sharedPreferenceHelper.loadShowBanister()
+        Settings.showEdward = sharedPreferenceHelper.loadShowEdward()
+        Settings.showLucia = sharedPreferenceHelper.loadShowLucia()
+        Settings.showStango = sharedPreferenceHelper.loadShowStango()
 
         // 检查蓝牙连接
         checkBT()

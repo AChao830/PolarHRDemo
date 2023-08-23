@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/trimpSettingsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingLeft="6dp"
+        android:paddingTop="16dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="16dp"
+        >
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowTRIMP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/trimp_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowBanister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/banister_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowEdward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/edward_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowLucia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/lucia_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowStango"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/stango_switch" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

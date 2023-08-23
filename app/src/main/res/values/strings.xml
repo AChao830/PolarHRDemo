@@ -28,4 +28,17 @@
     <string name="button_hr_settings">HeartRate Settings</string>
     <string name="button_hrv_settings">HRV Settings</string>
     <string name="button_trimp_settings">TRIMP Settings</string>
+    <string name="hr_switch">Show HeartRate All</string>
+    <string name="heart_rate_switch">Show HeartRate</string>
+    <string name="hr_percentage_switch">Show HR Percentage</string>
+    <string name="hr_zone_switch">Show HR Zone</string>
+    <string name="hrv_switch">Show HRV All</string>
+    <string name="sdrr_switch">Show SDRR</string>
+    <string name="pnn50_switch">Show pNN50</string>
+    <string name="rmssd_switch">Show RMSSD</string>
+    <string name="trimp_switch">Show TRIMP All</string>
+    <string name="banister_switch">Show Banister\'s TRIMP</string>
+    <string name="edward_switch">Show Edward\'s TRIMP</string>
+    <string name="lucia_switch">Show Lucia\'s TRIMP</string>
+    <string name="stango_switch">Show Stango\'s TRIMP</string>
 </resources>

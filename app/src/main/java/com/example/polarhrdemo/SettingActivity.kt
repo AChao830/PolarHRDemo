@@ -426,9 +426,85 @@ class HRSettingActivity: AppCompatActivity() {
         private const val TAG = "HRSettingActivity"
     }
 
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hr_settings)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
+
+        val showHRSwitch: SwitchCompat = findViewById(R.id.switchShowHR)
+        showHRSwitch.isChecked = Settings.showHR // 初始化开关的状态
+        showHRSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowHRSwitch(isChecked)
+        }
+
+        val showHeartRateSwitch: SwitchCompat = findViewById(R.id.switchShowHeartRate)
+        showHeartRateSwitch.isChecked = Settings.showHeartRate // 初始化开关的状态
+        showHeartRateSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowHeartRateSwitch(isChecked)
+        }
+
+        val showHRPercentageSwitch: SwitchCompat = findViewById(R.id.switchShowHRPercentage)
+        showHRPercentageSwitch.isChecked = Settings.showHRPercentage // 初始化开关的状态
+        showHRPercentageSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowHRPercentageSwitch(isChecked)
+        }
+
+        val showHRZoneSwitch: SwitchCompat = findViewById(R.id.switchShowHRZone)
+        showHRZoneSwitch.isChecked = Settings.showHRZone // 初始化开关的状态
+        showHRZoneSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowHRZoneSwitch(isChecked)
+        }
+    }
+
+    private fun onCheckedChangeShowHRSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showHR = true
+            sharedPreferenceHelper.saveShowHR(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showHR = false
+            sharedPreferenceHelper.saveShowHR(false)
+        }
+    }
+
+    private fun onCheckedChangeShowHeartRateSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showHeartRate = true
+            sharedPreferenceHelper.saveShowHeartRate(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showHeartRate = false
+            sharedPreferenceHelper.saveShowHeartRate(false)
+        }
+    }
+
+    private fun onCheckedChangeShowHRPercentageSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showHRPercentage = true
+            sharedPreferenceHelper.saveShowHRPercentage(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showHRPercentage = false
+            sharedPreferenceHelper.saveShowHRPercentage(false)
+        }
+    }
+
+    private fun onCheckedChangeShowHRZoneSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showHRZone = true
+            sharedPreferenceHelper.saveShowHRZone(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showHRZone = false
+            sharedPreferenceHelper.saveShowHRZone(false)
+        }
     }
 }
 

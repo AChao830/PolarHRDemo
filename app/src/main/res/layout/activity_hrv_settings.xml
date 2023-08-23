@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/hrvSettingsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        >
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowHRV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/hrv_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowSDRR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/sdrr_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowpNN50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/pnn50_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowRMSSD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/rmssd_switch" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
