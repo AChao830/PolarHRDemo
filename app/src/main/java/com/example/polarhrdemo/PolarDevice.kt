@@ -382,18 +382,86 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     fun exportDataToCSV(groupId:String, context: Context, fileName: String) {
         // CSV头
         val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" +
-                "Timestamp,HeartRate,HeartRatePercentage,HeartRateZone,SDRR,pNN50,RMSSD," +
-                "BanistersTRIMP,EdwardsTRIMP,LuciasTRIMP,StangosTRIMP,Period\n"
+        var csvHeader = "ID:${deviceId},Group:${groupId},Date:${currentDateTime}\n" + "Timestamp"
+        if (Settings.showHR) {
+            if (Settings.showHeartRate) {
+                csvHeader += ",HeartRate"
+            }
+            if (Settings.showHRPercentage){
+                csvHeader += ",HeartRatePercentage"
+            }
+            if (Settings.showHRZone) {
+                csvHeader += ",HeartRateZone"
+            }
+        }
+        if (Settings.showHRV) {
+            if (Settings.showSDRR) {
+                csvHeader += ",SDRR"
+            }
+            if (Settings.showpNN50) {
+                csvHeader += ",pNN50"
+            }
+            if (Settings.showRMSSD) {
+                csvHeader += ",RMSSD"
+            }
+        }
+        if (Settings.showTRIMP) {
+            if (Settings.showBanister) {
+                csvHeader += ",BanistersTRIMP"
+            }
+            if (Settings.showEdward) {
+                csvHeader += ",EdwardsTRIMP"
+            }
+            if (Settings.showLucia) {
+                csvHeader += ",LuciasTRIMP"
+            }
+            if (Settings.showStango) {
+                csvHeader += ",StangosTRIMP"
+            }
+        }
+        csvHeader += ",Period\n"
         val csvContent = StringBuilder(csvHeader)
         // CSV内容
         for (data in deviceDataList.reversed()) {
             val periodValue = data.period?.toString() ?: "" // 处理空值
-            val csvLine = "${data.timestamp},${data.hr},${"%.2f".format(data.hrPercentage)}," +
-                    "${data.hrZone},${"%.2f".format(data.SDRR)},${"%.2f".format(data.pNN50)}," +
-                    "${"%.2f".format(data.RMSSD)},${"%.2f".format(data.BanistersTRIMP)}," +
-                    "${"%.2f".format(data.EdwardsTRIMP)},${"%.2f".format(data.LuciasTRIMP)}," +
-                    "${"%.2f".format(data.StangosTRIMP)},$periodValue\n"
+            var csvLine = data.timestamp
+            if (Settings.showHR) {
+                if (Settings.showHeartRate) {
+                    csvLine += ",${data.hr}"
+                }
+                if (Settings.showHRPercentage){
+                    csvLine += ",${"%.2f".format(data.hrPercentage)}"
+                }
+                if (Settings.showHRZone) {
+                    csvLine += ",${data.hrZone}"
+                }
+            }
+            if (Settings.showHRV) {
+                if (Settings.showSDRR) {
+                    csvLine += ",${"%.2f".format(data.SDRR)}"
+                }
+                if (Settings.showpNN50) {
+                    csvLine += ",${"%.2f".format(data.pNN50)}"
+                }
+                if (Settings.showRMSSD) {
+                    csvLine += ",${"%.2f".format(data.RMSSD)}"
+                }
+            }
+            if (Settings.showTRIMP) {
+                if (Settings.showBanister) {
+                    csvLine += ",${"%.2f".format(data.BanistersTRIMP)}"
+                }
+                if (Settings.showEdward) {
+                    csvLine += ",${"%.2f".format(data.EdwardsTRIMP)}"
+                }
+                if (Settings.showLucia) {
+                    csvLine += ",${"%.2f".format(data.LuciasTRIMP)}"
+                }
+                if (Settings.showStango) {
+                    csvLine += ",${"%.2f".format(data.StangosTRIMP)}"
+                }
+            }
+            csvLine += ",$periodValue\n"
             csvContent.append(csvLine)
         }
         val csvData = csvContent.toString()
@@ -437,33 +505,109 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             sheet.addCell(Label(5, 0, currentDateTime))
 
             // Add headers
-            sheet.addCell(Label(0, 1, "Timestamp"))
-            sheet.addCell(Label(1, 1, "HeartRate"))
-            sheet.addCell(Label(2, 1, "HeartRatePercentage"))
-            sheet.addCell(Label(3, 1, "HeartRateZone"))
-            sheet.addCell(Label(4, 1, "SDRR"))
-            sheet.addCell(Label(5, 1, "pNN50"))
-            sheet.addCell(Label(6, 1, "RMSSD"))
-            sheet.addCell(Label(7, 1, "BanistersTRIMP"))
-            sheet.addCell(Label(8, 1, "EdwardsTRIMP"))
-            sheet.addCell(Label(9, 1, "LuciasTRIMP"))
-            sheet.addCell(Label(10, 1, "StangosTRIMP"))
-            sheet.addCell(Label(11, 1, "Period"))
+            var c = 0
+            sheet.addCell(Label(c, 1, "Timestamp"))
+            c += 1
+            if (Settings.showHR) {
+                if (Settings.showHeartRate) {
+                    sheet.addCell(Label(c, 1, "HeartRate"))
+                    c += 1
+                }
+                if (Settings.showHRPercentage){
+                    sheet.addCell(Label(c, 1, "HeartRatePercentage"))
+                    c += 1
+                }
+                if (Settings.showHRZone) {
+                    sheet.addCell(Label(c, 1, "HeartRateZone"))
+                    c += 1
+                }
+            }
+            if (Settings.showHRV) {
+                if (Settings.showSDRR) {
+                    sheet.addCell(Label(c, 1, "SDRR"))
+                    c += 1
+                }
+                if (Settings.showpNN50) {
+                    sheet.addCell(Label(c, 1, "pNN50"))
+                    c += 1
+                }
+                if (Settings.showRMSSD) {
+                    sheet.addCell(Label(c, 1, "RMSSD"))
+                    c += 1
+                }
+            }
+            if (Settings.showTRIMP) {
+                if (Settings.showBanister) {
+                    sheet.addCell(Label(c, 1, "BanistersTRIMP"))
+                    c += 1
+                }
+                if (Settings.showEdward) {
+                    sheet.addCell(Label(c, 1, "EdwardsTRIMP"))
+                    c += 1
+                }
+                if (Settings.showLucia) {
+                    sheet.addCell(Label(c, 1, "LuciasTRIMP"))
+                    c += 1
+                }
+                if (Settings.showStango) {
+                    sheet.addCell(Label(c, 1, "StangosTRIMP"))
+                    c += 1
+                }
+            }
+            sheet.addCell(Label(c, 1, "Period"))
 
             // Add data rows
             for ((index, data) in deviceDataList.reversed().withIndex()) {
-                sheet.addCell(Label(0, index + 2, data.timestamp.toString()))
-                sheet.addCell(Label(1, index + 2, data.hr.toString()))
-                sheet.addCell(Label(2, index + 2, "%.2f".format(data.hrPercentage)))
-                sheet.addCell(Label(3, index + 2, data.hrZone.toString()))
-                sheet.addCell(Label(4, index + 2, "%.2f".format(data.SDRR)))
-                sheet.addCell(Label(5, index + 2, "%.2f".format(data.pNN50)))
-                sheet.addCell(Label(6, index + 2, "%.2f".format(data.RMSSD)))
-                sheet.addCell(Label(7, index + 2, "%.2f".format(data.BanistersTRIMP)))
-                sheet.addCell(Label(8, index + 2, "%.2f".format(data.EdwardsTRIMP)))
-                sheet.addCell(Label(9, index + 2, "%.2f".format(data.LuciasTRIMP)))
-                sheet.addCell(Label(10, index + 2, "%.2f".format(data.StangosTRIMP)))
-                sheet.addCell(Label(11, index + 2, data.period?.toString()))
+                var c = 0
+                sheet.addCell(Label(c, index + 2, data.timestamp.toString()))
+                c += 1
+                if (Settings.showHR) {
+                    if (Settings.showHeartRate) {
+                        sheet.addCell(Label(c, index + 2, data.hr.toString()))
+                        c += 1
+                    }
+                    if (Settings.showHRPercentage){
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.hrPercentage)))
+                        c += 1
+                    }
+                    if (Settings.showHRZone) {
+                        sheet.addCell(Label(c, index + 2, data.hrZone.toString()))
+                        c += 1
+                    }
+                }
+                if (Settings.showHRV) {
+                    if (Settings.showSDRR) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.SDRR)))
+                        c += 1
+                    }
+                    if (Settings.showpNN50) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.pNN50)))
+                        c += 1
+                    }
+                    if (Settings.showRMSSD) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.RMSSD)))
+                        c += 1
+                    }
+                }
+                if (Settings.showTRIMP) {
+                    if (Settings.showBanister) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.BanistersTRIMP)))
+                        c += 1
+                    }
+                    if (Settings.showEdward) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.EdwardsTRIMP)))
+                        c += 1
+                    }
+                    if (Settings.showLucia) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.LuciasTRIMP)))
+                        c += 1
+                    }
+                    if (Settings.showStango) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.StangosTRIMP)))
+                        c += 1
+                    }
+                }
+                sheet.addCell(Label(c, index + 2, data.period?.toString()))
             }
 
             // Write and close the workbook

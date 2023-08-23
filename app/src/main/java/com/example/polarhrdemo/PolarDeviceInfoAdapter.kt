@@ -32,11 +32,59 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = deviceList[position]
-        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  Battery: ${device.getLatestBattery()}\n" +
-                "HeartRate: ${device.getLatestHeartRate()} HR Percentage: ${device.getLatestHRPercentage()} HR Zone: ${device.getLatestHRZone()}\n" +
-                "SDRR: ${device.getLatestSDRR()} pNN50: ${device.getLatestpNN50()} RMSSD: ${device.getLatestRMSSD()}\n" +
-                "BanistersTRIMP: ${device.getLatestBanistersTRIMP()}, EdwardsTRIMP: ${device.getLatestEdwardsTRIMP()}\n" +
-                "LucaisTRIMP: ${device.getLatestLuciasTRIMP()}, StangosTRIMP: ${device.getLatestStangosTRIMP()}"
+
+        holder.textViewDeviceInfo.text = "Device Id: ${device.deviceId}  Battery: ${device.getLatestBattery()}\n"
+        if (Settings.showHR) {
+            var textHR = ""
+            if (Settings.showHeartRate) {
+                textHR += "HeartRate: ${device.getLatestHeartRate()} "
+            }
+            if (Settings.showHRPercentage){
+                textHR += "HR Percentage: ${device.getLatestHRPercentage()} "
+            }
+            if (Settings.showHRZone) {
+                textHR += "HR Zone: ${device.getLatestHRZone()} "
+            }
+            if (textHR != "") {
+                textHR += "\n"
+            }
+            holder.textViewDeviceInfo.text = holder.textViewDeviceInfo.text.toString() + textHR
+        }
+        if (Settings.showHRV) {
+            var textHRV = ""
+            if (Settings.showSDRR) {
+                textHRV += "SDRR: ${device.getLatestSDRR()} "
+            }
+            if (Settings.showpNN50) {
+                textHRV += "pNN50: ${device.getLatestpNN50()} "
+            }
+            if (Settings.showRMSSD) {
+                textHRV += "RMSSD: ${device.getLatestRMSSD()} "
+            }
+            if (textHRV != "") {
+                textHRV += "\n"
+            }
+            holder.textViewDeviceInfo.text = holder.textViewDeviceInfo.text.toString() + textHRV
+        }
+        if (Settings.showTRIMP) {
+            var textTRIMP = ""
+            if (Settings.showBanister) {
+                textTRIMP += "BanistersTRIMP: ${device.getLatestBanistersTRIMP()} "
+            }
+            if (Settings.showEdward) {
+                textTRIMP += "EdwardsTRIMP: ${device.getLatestEdwardsTRIMP()} "
+            }
+            if (Settings.showLucia) {
+                textTRIMP += "LucaisTRIMP: ${device.getLatestLuciasTRIMP()} "
+            }
+            if (Settings.showStango) {
+                textTRIMP += "StangosTRIMP: ${device.getLatestStangosTRIMP()} "
+            }
+            if (textTRIMP != "") {
+                textTRIMP += "\n"
+            }
+            holder.textViewDeviceInfo.text = holder.textViewDeviceInfo.text.toString() + textTRIMP
+        }
         holder.buttonDeleteDevice.tag = "${device.groupId},${device.deviceId}"
         holder.plot.addSeries(device.plotter.hrSeries, device.plotter.hrFormatter)
         holder.plot.setRangeBoundaries(50, Settings.maxHeartRate, BoundaryMode.AUTO)

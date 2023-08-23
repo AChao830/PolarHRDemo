@@ -15,9 +15,23 @@ object Settings {
     var zone4: Int = 80
     var zone5: Int = 90
     var zone6: Int = 100 // unchangeable
-
     var sex: String = "Male"
-
     var LT1: Int = 88 // LT1阈值
     var LT2: Int = 92 // LT2阈值
+    // HR控制展示与记录
+    var showHR:Boolean = true // 总控
+    var showHeartRate: Boolean = true
+    var showHRPercentage: Boolean = true
+    var showHRZone: Boolean = true
+    // HRV控制展示与记录
+    var showHRV: Boolean = false
+    var showSDRR:Boolean = true
+    var showpNN50: Boolean = true
+    var showRMSSD: Boolean = true
+    // TRIMP控制展示与记录
+    var showTRIMP: Boolean = true
+    var showBanister: Boolean = false
+    var showEdward: Boolean = true
+    var showLucia: Boolean = false
+    var showStango: Boolean = true
 }
