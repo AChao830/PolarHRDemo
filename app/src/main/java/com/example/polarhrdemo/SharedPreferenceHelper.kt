@@ -180,4 +180,12 @@ class SharedPreferenceHelper(context: Context) {
     fun loadShowStango(): Boolean {
         return sharedPreferences.getBoolean("showStango", true)
     }
+
+    fun savePlayer(player: String, deviceId: String) {
+        sharedPreferences.edit().putString(player, deviceId).apply()
+    }
+
+    fun loadPlayer(player: String): String? {
+        return sharedPreferences.getString(player, "")
+    }
 }

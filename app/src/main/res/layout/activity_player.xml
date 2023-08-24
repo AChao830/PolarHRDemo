@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer1Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer1Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player1"
+            android:text="Player1, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer1Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer1DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer1DeviceId"
+                android:tag="Player1"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer1DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer1DeviceId"
+                android:tag="Player1"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer2Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer1Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer2Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player2"
+            android:text="Player2, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer2Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer2DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer2DeviceId"
+                android:tag="Player2"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer2DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer2DeviceId"
+                android:tag="Player2"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer3Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer2Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer3Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player3"
+            android:text="Player3, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer3Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer3DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer3DeviceId"
+                android:tag="Player3"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer3DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer3DeviceId"
+                android:tag="Player3"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer4Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer3Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer4Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player4"
+            android:text="Player4, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer4Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer4DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer4DeviceId"
+                android:tag="Player4"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer4DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer4DeviceId"
+                android:tag="Player4"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer5Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer4Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer5Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player5"
+            android:text="Player5, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer5Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer5DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer5DeviceId"
+                android:tag="Player5"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer5DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer5DeviceId"
+                android:tag="Player5"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer6Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer5Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer6Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player6"
+            android:text="player6, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer6Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer6DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer6DeviceId"
+                android:tag="Player6"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer6DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer6DeviceId"
+                android:tag="Player6"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer7Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer6Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer7Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player7"
+            android:text="Player7, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer7Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer7DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer7DeviceId"
+                android:tag="Player7"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer7DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer7DeviceId"
+                android:tag="Player7"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlayer8Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutPlayer7Info"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/textViewPlayer8Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:tag="Player8"
+            android:text="Player8, Device ID: 123456"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayer8Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp">
+
+            <Button
+                android:id="@+id/buttonChangePlayer8DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickChangePlayer8DeviceId"
+                android:tag="Player8"
+                android:text="@string/change_player_device_id_button" />
+
+            <Button
+                android:id="@+id/buttonClearPlayer8DeviceId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClickClearPlayer8DeviceId"
+                android:tag="Player8"
+                android:text="@string/clear_player_device_id_button" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

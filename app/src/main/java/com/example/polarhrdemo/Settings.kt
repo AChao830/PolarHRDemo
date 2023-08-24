@@ -34,4 +34,13 @@ object Settings {
     var showEdward: Boolean = true
     var showLucia: Boolean = false
     var showStango: Boolean = true
+
+    var Player1: String = ""
+    var Player2: String = ""
+    var Player3: String = ""
+    var Player4: String = ""
+    var Player5: String = ""
+    var Player6: String = ""
+    var Player7: String = ""
+    var Player8: String = ""
 }

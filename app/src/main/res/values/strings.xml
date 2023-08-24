@@ -45,4 +45,7 @@
     <string name="scan_page_button">Scan</string>
     <string name="copy_device_id_button">Copy ID</string>
     <string name="assign_device_to_player_button">Assign To Player</string>
+    <string name="change_player_device_id_button">Change</string>
+    <string name="clear_player_device_id_button">Clear</string>
+    <string name="player_button">Players</string>
 </resources>

@@ -73,6 +73,17 @@ class MainActivity : AppCompatActivity() {
         Settings.showLucia = sharedPreferenceHelper.loadShowLucia()
         Settings.showStango = sharedPreferenceHelper.loadShowStango()
 
+        // 获取Player
+        Settings.Player1 = sharedPreferenceHelper.loadPlayer("Player1")?: ""
+        Settings.Player2 = sharedPreferenceHelper.loadPlayer("Player2")?: ""
+        Settings.Player3 = sharedPreferenceHelper.loadPlayer("Player3")?: ""
+        Settings.Player4 = sharedPreferenceHelper.loadPlayer("Player4")?: ""
+        Settings.Player5 = sharedPreferenceHelper.loadPlayer("Player5")?: ""
+        Settings.Player6 = sharedPreferenceHelper.loadPlayer("Player6")?: ""
+        Settings.Player7 = sharedPreferenceHelper.loadPlayer("Player7")?: ""
+        Settings.Player8 = sharedPreferenceHelper.loadPlayer("Player8")?: ""
+
+
         // 检查蓝牙连接
         checkBT()
 
@@ -84,6 +95,9 @@ class MainActivity : AppCompatActivity() {
 
         val scanButton: Button = findViewById(R.id.buttonScan)
         scanButton.setOnClickListener { onClickButtonScan(it) }
+
+        val playerButton: Button = findViewById(R.id.buttonPlayer)
+        playerButton.setOnClickListener { onClickButtonPlayer(it) }
     }
 
     fun onClickButtonTest(view: View) {
@@ -108,6 +122,12 @@ class MainActivity : AppCompatActivity() {
     // 跳转至扫描页面
     private fun onClickButtonScan(view: View) {
         val intent = Intent(this, ScanActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 跳转至Player页面
+    private fun onClickButtonPlayer(view: View) {
+        val intent = Intent(this, PlayerActivity::class.java)
         startActivity(intent)
     }
 
