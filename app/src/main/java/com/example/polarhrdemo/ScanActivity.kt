@@ -17,6 +17,8 @@ import com.polar.sdk.api.model.PolarHrData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.UUID
+import android.content.ClipboardManager
+import android.content.Context
 
 class ScanActivity: AppCompatActivity() {
     companion object {
@@ -100,9 +102,9 @@ class ScanActivity: AppCompatActivity() {
     private fun onClickScanButton(view: View) {
         val isDisposed = scanDisposable?.isDisposed ?: true
         if (isDisposed) {
-            scanDisposable = api.searchForDevice()
-            /*val mockDeviceInfoObservable = testUtils.createMockDeviceINfoObservable()
-            scanDisposable = mockDeviceInfoObservable*/
+            /*scanDisposable = api.searchForDevice()*/
+            val mockDeviceInfoObservable = testUtils.createMockDeviceINfoObservable()
+            scanDisposable = mockDeviceInfoObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { polarDeviceInfo: PolarDeviceInfo ->
@@ -123,6 +125,19 @@ class ScanActivity: AppCompatActivity() {
         } else {
             scanDisposable?.dispose()
         }
+    }
+
+    // 处理复制deviceId按钮事务逻辑
+    fun onClickCopyDeviceIdButton(view: View) {
+        val deviceId = view.tag.toString()
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = android.content.ClipData.newPlainText("Copied Text", deviceId)
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
+    // 处理分配player按钮事务逻辑
+    fun onClickAssignDeviceToPlayerButton(view: View) {
+
     }
 
     // 底部提示信息条
