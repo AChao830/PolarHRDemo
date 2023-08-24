@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import java.util.UUID
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.appcompat.app.AlertDialog
 
 class ScanActivity: AppCompatActivity() {
     companion object {
@@ -27,6 +28,7 @@ class ScanActivity: AppCompatActivity() {
 
     private val scanDeviceList = mutableListOf<String>()
     private var testUtils = TestUtils()
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     private val api: PolarBleApi by lazy {
         // Notice all features are enabled
@@ -53,6 +55,8 @@ class ScanActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
         scanButton = findViewById(R.id.buttonScanDevices)
 
@@ -102,26 +106,46 @@ class ScanActivity: AppCompatActivity() {
     private fun onClickScanButton(view: View) {
         val isDisposed = scanDisposable?.isDisposed ?: true
         if (isDisposed) {
-            /*scanDisposable = api.searchForDevice()*/
-            val mockDeviceInfoObservable = testUtils.createMockDeviceINfoObservable()
-            scanDisposable = mockDeviceInfoObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { polarDeviceInfo: PolarDeviceInfo ->
-                        scanDeviceList.add(polarDeviceInfo.deviceId)
-                        showToast("polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)
-                        Log.d(TAG, "polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)
-                        scanDeviceInfoAdapter.updateData()
-                    },
-                    { error: Throwable ->
-                        showToast("Device scan failed. Reason $error")
-                        Log.e(TAG, "Device scan failed. Reason $error")
-                    },
-                    {
-                        showToast("complete")
-                        Log.d(TAG, "complete")
-                    }
-                )
+            if (Settings.testMode) {
+                val mockDeviceInfoObservable = testUtils.createMockDeviceINfoObservable()
+                scanDisposable = mockDeviceInfoObservable
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { polarDeviceInfo: PolarDeviceInfo ->
+                            scanDeviceList.add(polarDeviceInfo.deviceId)
+                            /*showToast("polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)*/
+                            Log.d(TAG, "polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)
+                            scanDeviceInfoAdapter.updateData()
+                        },
+                        { error: Throwable ->
+                            showToast("Device scan failed. Reason $error")
+                            Log.e(TAG, "Device scan failed. Reason $error")
+                        },
+                        {
+                            showToast("complete")
+                            Log.d(TAG, "complete")
+                        }
+                    )
+            } else {
+                scanDisposable = api.searchForDevice()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { polarDeviceInfo: PolarDeviceInfo ->
+                            scanDeviceList.add(polarDeviceInfo.deviceId)
+                            /*showToast("polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)*/
+                            Log.d(TAG, "polar device found id: " + polarDeviceInfo.deviceId + " address: " + polarDeviceInfo.address + " rssi: " + polarDeviceInfo.rssi + " name: " + polarDeviceInfo.name + " isConnectable: " + polarDeviceInfo.isConnectable)
+                            scanDeviceInfoAdapter.updateData()
+                        },
+                        { error: Throwable ->
+                            showToast("Device scan failed. Reason $error")
+                            Log.e(TAG, "Device scan failed. Reason $error")
+                        },
+                        {
+                            showToast("complete")
+                            Log.d(TAG, "complete")
+                        }
+                    )
+            }
         } else {
             scanDisposable?.dispose()
         }
@@ -137,7 +161,68 @@ class ScanActivity: AppCompatActivity() {
 
     // 处理分配player按钮事务逻辑
     fun onClickAssignDeviceToPlayerButton(view: View) {
+        showAssignDeviceToPlayerDialog(view)
+    }
 
+    private fun showAssignDeviceToPlayerDialog(view: View) {
+        val options = playerList.toTypedArray()
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Player")
+            .setSingleChoiceItems(options, -1) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player1 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player1", deviceId)
+                        showToast("Device Id: $deviceId save as Player1")
+                    }
+                    1 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player2 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player2", deviceId)
+                        showToast("Device Id: $deviceId save as Player2")
+                    }
+                    2 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player3 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player3", deviceId)
+                        showToast("Device Id: $deviceId save as Player3")
+                    }
+                    3 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player4 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player4", deviceId)
+                        showToast("Device Id: $deviceId save as Player4")
+                    }
+                    4 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player5 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player5", deviceId)
+                        showToast("Device Id: $deviceId save as Player5")
+                    }
+                    5 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player6 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player6", deviceId)
+                        showToast("Device Id: $deviceId save as Player6")
+                    }
+                    6 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player7 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player7", deviceId)
+                        showToast("Device Id: $deviceId save as Player7")
+                    }
+                    7 -> {
+                        val deviceId = view.tag.toString()
+                        Settings.Player8 = deviceId
+                        sharedPreferenceHelper.savePlayer("Player8", deviceId)
+                        showToast("Device Id: $deviceId save as Player8")
+                    }
+                }
+            }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     // 底部提示信息条

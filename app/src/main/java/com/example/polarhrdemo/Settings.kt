@@ -18,6 +18,14 @@ object Settings {
     var gender: String = "Male"
     var LT1: Int = 88 // LT1阈值
     var LT2: Int = 92 // LT2阈值
+    // Zone的自定义coefficient
+    var zone0Coefficient: Double = 0.0
+    var zone1Coefficient: Double = 0.0
+    var zone2Coefficient: Double = 0.0
+    var zone3Coefficient: Double = 0.0
+    var zone4Coefficient: Double = 0.0
+    var zone5Coefficient: Double = 0.0
+    var zone6Coefficient: Double = 0.0
     // HR控制展示与记录
     var showHR:Boolean = true // 总控
     var showHeartRate: Boolean = true

@@ -188,4 +188,28 @@ class SharedPreferenceHelper(context: Context) {
     fun loadPlayer(player: String): String? {
         return sharedPreferences.getString(player, "")
     }
+
+    fun saveLT1(LT1: Int) {
+        sharedPreferences.edit().putInt("LT1", LT1).apply()
+    }
+
+    fun loadLT1(): Int {
+        return sharedPreferences.getInt("LT1", 88)
+    }
+
+    fun saveLT2(LT2: Int) {
+        sharedPreferences.edit().putInt("LT2", LT2).apply()
+    }
+
+    fun loadLT2(): Int {
+        return sharedPreferences.getInt("LT2", 92)
+    }
+
+    fun saveZoneCoefficient(zone:String, coefficient:Double) {
+        sharedPreferences.edit().putFloat(zone, coefficient.toFloat()).apply()
+    }
+
+    fun loadZoneCoefficient(zone: String): Double {
+        return sharedPreferences.getFloat(zone, 0.0f).toDouble()
+    }
 }

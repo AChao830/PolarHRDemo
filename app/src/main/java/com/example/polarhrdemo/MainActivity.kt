@@ -72,6 +72,15 @@ class MainActivity : AppCompatActivity() {
         Settings.showEdward = sharedPreferenceHelper.loadShowEdward()
         Settings.showLucia = sharedPreferenceHelper.loadShowLucia()
         Settings.showStango = sharedPreferenceHelper.loadShowStango()
+        Settings.LT1 = sharedPreferenceHelper.loadLT1()
+        Settings.LT2 = sharedPreferenceHelper.loadLT2()
+        Settings.zone0Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone0Coefficient")
+        Settings.zone1Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone1Coefficient")
+        Settings.zone2Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone2Coefficient")
+        Settings.zone3Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone3Coefficient")
+        Settings.zone4Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone4Coefficient")
+        Settings.zone5Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone5Coefficient")
+        Settings.zone6Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone6Coefficient")
 
         // 获取Player
         Settings.Player1 = sharedPreferenceHelper.loadPlayer("Player1")?: ""

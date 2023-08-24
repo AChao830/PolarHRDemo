@@ -681,6 +681,17 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         return 0.0
     }
 
+    // 平均心率，最大心率，最小心率，各个TRIMP的增加量
+    // 计算总结，全区间
+    /*private fun summaryAllSession(): Map<String, Double> {
+    }*/
+
+    // 计算总结，区间内，不包括间隔
+
+    // 计算总结，区间内，包括间隔
+
+    // 计算总结，单个区间
+
     // 底部提示信息条
     private fun showToast(message: String) {
         val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)

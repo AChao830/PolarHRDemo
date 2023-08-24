@@ -26,6 +26,8 @@ class SettingActivity: AppCompatActivity() {
     private lateinit var textViewMaxHR: TextView
     private lateinit var textViewRestHR: TextView
     private lateinit var textViewGender: TextView
+    private lateinit var textViewLT1: TextView
+    private lateinit var textViewLT2: TextView
     private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,16 @@ class SettingActivity: AppCompatActivity() {
         buttonChangeGender.setOnClickListener{
             onClickChangeGenderButton(it)
         }
+
+        textViewLT1 = findViewById(R.id.textViewLT1)
+        textViewLT1.text = "LT1: ${Settings.LT1}%"
+        val buttonChangeLT1: Button = findViewById(R.id.buttonChangeLT1)
+        buttonChangeLT1.setOnClickListener { onClickChangeLT1Button(it) }
+
+        textViewLT2 = findViewById(R.id.textViewLT2)
+        textViewLT2.text = "LT1: ${Settings.LT2}%"
+        val buttonChangeLT2: Button = findViewById(R.id.buttonChangeLT2)
+        buttonChangeLT2.setOnClickListener { onClickChangeLT2Button(it) }
 
         val buttonZoneSettings: Button = findViewById(R.id.buttonZoneSettings)
         buttonZoneSettings.setOnClickListener {
@@ -177,6 +189,54 @@ class SettingActivity: AppCompatActivity() {
                 }
             }
         val dialog = builder.create()
+        dialog.show()
+    }
+
+    // 处理改变LT1按钮事务逻辑
+    private fun onClickChangeLT1Button(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new LT1")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.max_hr_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_max_hr)
+        input.setText(Settings.LT1.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newLT1 = input.text.toString().toIntOrNull()
+            if (newLT1 != null) {
+                Settings.LT1 = newLT1
+                textViewLT1.text = "LT1: ${Settings.LT1}%"
+                sharedPreferenceHelper.saveLT1(newLT1)
+                showToast("Changed LT1 to $newLT1")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // 处理改变LT2按钮事务逻辑
+    private fun onClickChangeLT2Button(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new LT2")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.max_hr_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_max_hr)
+        input.setText(Settings.LT2.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newLT2 = input.text.toString().toIntOrNull()
+            if (newLT2 != null) {
+                Settings.LT2 = newLT2
+                textViewLT2.text = "LT2: ${Settings.LT2}%"
+                sharedPreferenceHelper.saveLT2(newLT2)
+                showToast("Changed LT1 to $newLT2")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
         dialog.show()
     }
 
