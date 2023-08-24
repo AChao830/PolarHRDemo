@@ -12,7 +12,7 @@ class TestUtils {
     fun createMockHRDataObservable(): Observable<PolarHrData> {
         return Observable.interval(1, TimeUnit.SECONDS)
             .map {
-                val hr = Random.nextInt(60, 100) // 随机生成HR值在60到100之间
+                val hr = Random.nextInt(60, 200) // 随机生成HR值在60到100之间
                 val rrsMs = List(Random.nextInt(1, 10)) { Random.nextInt(600, 1000) } // 随机生成1到10个RR间期值，每个值在600到1000之间
                 val sample = PolarHrData.PolarHrSample(hr, rrsMs, true, true, true)
                 PolarHrData(listOf(sample))

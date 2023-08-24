@@ -24,6 +24,7 @@ import jxl.write.WritableSheet
 import jxl.write.WritableWorkbook
 import kotlin.math.sqrt
 import kotlin.math.exp
+import kotlin.math.min
 
 class PolarDevice (val groupId:String, val deviceId: String, private val context: Context, private val testMode:Boolean) {
     /**
@@ -520,118 +521,214 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             sheet.addCell(Label(4, 0, "Date"))
             sheet.addCell(Label(5, 0, currentDateTime))
 
+            // Calculate Summary
+            val summaryAllSession = summaryAllSession()
+            val summaryAllPeriodWithGap = summaryAllPeriodWithGap()
+            val summaryAllPeriodWithoutGap = summaryAllPeriodWithoutGap()
+
+
+            // Add Summary
+            sheet.addCell(Label(0, 2, "Summary"))
+            sheet.addCell(Label(1, 2, "AllSession"))
+            sheet.addCell(Label(2, 2, "AllPeriodWithGap"))
+            sheet.addCell(Label(3, 2, "AllPeriodWithoutGap"))
+            for (i in 1 until period) {
+                sheet.addCell(Label(3+i, 2, "Period$i"))
+            }
+            var r = 3
+            if (Settings.showHR) {
+                if (Settings.showHeartRate) {
+                    sheet.addCell(Label(0, r, "MaxHR"))
+                    sheet.addCell(Label(1, r, summaryAllSession["maxHr"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["maxHr"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["maxHr"].toString()))
+                    sheet.addCell(Label(0, r+1, "MinHR"))
+                    sheet.addCell(Label(1, r+1, summaryAllSession["minHr"].toString()))
+                    sheet.addCell(Label(2, r+1, summaryAllPeriodWithGap["minHr"].toString()))
+                    sheet.addCell(Label(3, r+1, summaryAllPeriodWithoutGap["minHr"].toString()))
+                    sheet.addCell(Label(0, r+2, "AverageHR"))
+                    sheet.addCell(Label(1, r+2, summaryAllSession["averageHr"].toString()))
+                    sheet.addCell(Label(2, r+2, summaryAllPeriodWithGap["averageHr"].toString()))
+                    sheet.addCell(Label(3, r+2, summaryAllPeriodWithoutGap["averageHr"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["maxHr"].toString()))
+                        sheet.addCell(Label(3+i, r+1, summaryPeriod["minHr"].toString()))
+                        sheet.addCell(Label(3+i, r+2, summaryPeriod["averageHr"].toString()))
+                    }
+                    r += 3
+                }
+            }
+            if (Settings.showTRIMP) {
+                if (Settings.showBanister) {
+                    sheet.addCell(Label(0, r, "BanisterTRIMP increment"))
+                    sheet.addCell(Label(1, r, summaryAllSession["banistersTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["banistersTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["banistersTRIMPGrowth"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["banistersTRIMPGrowth"].toString()))
+                    }
+                    r += 1
+                }
+                if (Settings.showEdward) {
+                    sheet.addCell(Label(0, r, "EdwardTRIMP increment"))
+                    sheet.addCell(Label(1, r, summaryAllSession["edwardsTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["edwardsTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["edwardsTRIMPGrowth"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["edwardsTRIMPGrowth"].toString()))
+                    }
+                    r += 1
+                }
+                if (Settings.showLucia) {
+                    sheet.addCell(Label(0, r, "LuciaTRIMP increment"))
+                    sheet.addCell(Label(1, r, summaryAllSession["luciasTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["luciasTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["luciasTRIMPGrowth"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["luciasTRIMPGrowth"].toString()))
+                    }
+                    r += 1
+                }
+                if (Settings.showStango) {
+                    sheet.addCell(Label(0, r, "StangoTRIMP increment"))
+                    sheet.addCell(Label(1, r, summaryAllSession["stangosTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["stangosTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["stangosTRIMPGrowth"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["stangosTRIMPGrowth"].toString()))
+                    }
+                    r += 1
+                }
+                if (Settings.showCustom) {
+                    sheet.addCell(Label(0, r, "CustomTRIMP increment"))
+                    sheet.addCell(Label(1, r, summaryAllSession["customTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(2, r, summaryAllPeriodWithGap["customTRIMPGrowth"].toString()))
+                    sheet.addCell(Label(3, r, summaryAllPeriodWithoutGap["customTRIMPGrowth"].toString()))
+                    for (i in 1 until period) {
+                        val summaryPeriod = summaryPeriod(i)
+                        sheet.addCell(Label(3+i, r, summaryPeriod["customTRIMPGrowth"].toString()))
+                    }
+                    r += 1
+                }
+            }
+
             // Add headers
             var c = 0
-            sheet.addCell(Label(c, 1, "Timestamp"))
+            sheet.addCell(Label(c, 12, "Timestamp"))
             c += 1
             if (Settings.showHR) {
                 if (Settings.showHeartRate) {
-                    sheet.addCell(Label(c, 1, "HeartRate"))
+                    sheet.addCell(Label(c, 12, "HeartRate"))
                     c += 1
                 }
                 if (Settings.showHRPercentage){
-                    sheet.addCell(Label(c, 1, "HeartRatePercentage"))
+                    sheet.addCell(Label(c, 12, "HeartRatePercentage"))
                     c += 1
                 }
                 if (Settings.showHRZone) {
-                    sheet.addCell(Label(c, 1, "HeartRateZone"))
+                    sheet.addCell(Label(c, 12, "HeartRateZone"))
                     c += 1
                 }
             }
             if (Settings.showHRV) {
                 if (Settings.showSDRR) {
-                    sheet.addCell(Label(c, 1, "SDRR"))
+                    sheet.addCell(Label(c, 12, "SDRR"))
                     c += 1
                 }
                 if (Settings.showpNN50) {
-                    sheet.addCell(Label(c, 1, "pNN50"))
+                    sheet.addCell(Label(c, 12, "pNN50"))
                     c += 1
                 }
                 if (Settings.showRMSSD) {
-                    sheet.addCell(Label(c, 1, "RMSSD"))
+                    sheet.addCell(Label(c, 12, "RMSSD"))
                     c += 1
                 }
             }
             if (Settings.showTRIMP) {
                 if (Settings.showBanister) {
-                    sheet.addCell(Label(c, 1, "BanistersTRIMP"))
+                    sheet.addCell(Label(c, 12, "BanistersTRIMP"))
                     c += 1
                 }
                 if (Settings.showEdward) {
-                    sheet.addCell(Label(c, 1, "EdwardsTRIMP"))
+                    sheet.addCell(Label(c, 12, "EdwardsTRIMP"))
                     c += 1
                 }
                 if (Settings.showLucia) {
-                    sheet.addCell(Label(c, 1, "LuciasTRIMP"))
+                    sheet.addCell(Label(c, 12, "LuciasTRIMP"))
                     c += 1
                 }
                 if (Settings.showStango) {
-                    sheet.addCell(Label(c, 1, "StangosTRIMP"))
+                    sheet.addCell(Label(c, 12, "StangosTRIMP"))
                     c += 1
                 }
                 if (Settings.showCustom) {
-                    sheet.addCell(Label(c, 1, "CustomTRIMP"))
+                    sheet.addCell(Label(c, 12, "CustomTRIMP"))
                     c += 1
                 }
             }
-            sheet.addCell(Label(c, 1, "Period"))
+            sheet.addCell(Label(c, 12, "Period"))
 
             // Add data rows
             for ((index, data) in deviceDataList.reversed().withIndex()) {
                 var c = 0
-                sheet.addCell(Label(c, index + 2, data.timestamp.toString()))
+                sheet.addCell(Label(c, index + 13, data.timestamp.toString()))
                 c += 1
                 if (Settings.showHR) {
                     if (Settings.showHeartRate) {
-                        sheet.addCell(Label(c, index + 2, data.hr.toString()))
+                        sheet.addCell(Label(c, index + 13, data.hr.toString()))
                         c += 1
                     }
                     if (Settings.showHRPercentage){
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.hrPercentage)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.hrPercentage)))
                         c += 1
                     }
                     if (Settings.showHRZone) {
-                        sheet.addCell(Label(c, index + 2, data.hrZone.toString()))
+                        sheet.addCell(Label(c, index + 13, data.hrZone.toString()))
                         c += 1
                     }
                 }
                 if (Settings.showHRV) {
                     if (Settings.showSDRR) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.SDRR)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.SDRR)))
                         c += 1
                     }
                     if (Settings.showpNN50) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.pNN50)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.pNN50)))
                         c += 1
                     }
                     if (Settings.showRMSSD) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.RMSSD)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.RMSSD)))
                         c += 1
                     }
                 }
                 if (Settings.showTRIMP) {
                     if (Settings.showBanister) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.BanistersTRIMP)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.BanistersTRIMP)))
                         c += 1
                     }
                     if (Settings.showEdward) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.EdwardsTRIMP)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.EdwardsTRIMP)))
                         c += 1
                     }
                     if (Settings.showLucia) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.LuciasTRIMP)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.LuciasTRIMP)))
                         c += 1
                     }
                     if (Settings.showStango) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.StangosTRIMP)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.StangosTRIMP)))
                         c += 1
                     }
                     if (Settings.showCustom) {
-                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.CustomTRIMP)))
+                        sheet.addCell(Label(c, index + 13, "%.2f".format(data.CustomTRIMP)))
                         c += 1
                     }
                 }
-                sheet.addCell(Label(c, index + 2, data.period?.toString()))
+                sheet.addCell(Label(c, index + 13, data.period?.toString()))
             }
 
             // Write and close the workbook
@@ -715,14 +812,183 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
 
     // 平均心率，最大心率，最小心率，各个TRIMP的增加量
     // 计算总结，全区间
-    /*private fun summaryAllSession(): Map<String, Double> {
-    }*/
+    private fun summaryAllSession(): Map<String, Double?> {
+        val hrValues = deviceDataList.reversed().map { it.hr }
+        val maxHr = hrValues.maxOrNull()?.toDouble()
+        val minHr = hrValues.minOrNull()?.toDouble()
+        val averageHr = hrValues.average().toDouble()
+        val banistersTRIMPValues = deviceDataList.reversed().map { it.BanistersTRIMP }
+        val banistersTRIMPGrowth = (banistersTRIMPValues.lastOrNull() ?: 0.0) - (banistersTRIMPValues.firstOrNull() ?: 0.0)
+        val edwardsTRIMPValues = deviceDataList.reversed().map { it.EdwardsTRIMP }
+        val edwardsTRIMPGrowth = (edwardsTRIMPValues.lastOrNull() ?: 0.0) - (edwardsTRIMPValues.firstOrNull() ?: 0.0)
+        val luciasTRIMPValues = deviceDataList.reversed().map { it.LuciasTRIMP }
+        val luciasTRIMPGrowth = (luciasTRIMPValues.lastOrNull() ?: 0.0) - (luciasTRIMPValues.firstOrNull() ?: 0.0)
+        val stangosTRIMPValues = deviceDataList.reversed().map { it.StangosTRIMP }
+        val stangosTRIMPGrowth = (stangosTRIMPValues.lastOrNull() ?: 0.0) - (stangosTRIMPValues.firstOrNull() ?: 0.0)
+        val customTRIMPValues = deviceDataList.reversed().map { it.CustomTRIMP }
+        val customTRIMPGrowth = (customTRIMPValues.lastOrNull() ?: 0.0) - (customTRIMPValues.firstOrNull() ?: 0.0)
+
+        val map = mutableMapOf<String, Double?>()
+        map["maxHr"] = maxHr
+        map["minHr"] = minHr
+        map["averageHr"] = "%.2f".format(averageHr).toDouble()
+        map["banistersTRIMPGrowth"] = "%.2f".format(banistersTRIMPGrowth).toDouble()
+        map["edwardsTRIMPGrowth"] = "%.2f".format(edwardsTRIMPGrowth).toDouble()
+        map["luciasTRIMPGrowth"] = "%.2f".format(luciasTRIMPGrowth).toDouble()
+        map["stangosTRIMPGrowth"] = "%.2f".format(stangosTRIMPGrowth).toDouble()
+        map["customTRIMPGrowth"] = "%.2f".format(customTRIMPGrowth).toDouble()
+        return map
+    }
 
     // 计算总结，区间内，不包括间隔
+    private fun summaryAllPeriodWithoutGap(): Map<String, Double?> {
+        val dataList = mutableListOf<DeviceData>()
+        var banistersTRIMPGrowth = 0.0
+        var edwardsTRIMPGrowth = 0.0
+        var luciasTRIMPGrowth = 0.0
+        var stangosTRIMPGrowth = 0.0
+        var customTRIMPGrowth = 0.0
+
+        if (period == 1) {
+            // 没有用过period
+            for (data in deviceDataList) {
+                dataList.add(data)
+            }
+            val banistersTRIMPValues = dataList.map { it.BanistersTRIMP }
+            banistersTRIMPGrowth = (banistersTRIMPValues.lastOrNull() ?: 0.0) - (banistersTRIMPValues.firstOrNull() ?: 0.0)
+            val edwardsTRIMPValues = dataList.map { it.EdwardsTRIMP }
+            edwardsTRIMPGrowth = (edwardsTRIMPValues.lastOrNull() ?: 0.0) - (edwardsTRIMPValues.firstOrNull() ?: 0.0)
+            val luciasTRIMPValues = dataList.map { it.LuciasTRIMP }
+            luciasTRIMPGrowth = (luciasTRIMPValues.lastOrNull() ?: 0.0) - (luciasTRIMPValues.firstOrNull() ?: 0.0)
+            val stangosTRIMPValues = dataList.map { it.StangosTRIMP }
+            stangosTRIMPGrowth = (stangosTRIMPValues.lastOrNull() ?: 0.0) - (stangosTRIMPValues.firstOrNull() ?: 0.0)
+            val customTRIMPValues = dataList.map { it.CustomTRIMP }
+            customTRIMPGrowth = (customTRIMPValues.lastOrNull() ?: 0.0) - (customTRIMPValues.firstOrNull() ?: 0.0)
+        } else {
+            // 过滤掉不在区间内的
+            for (data in deviceDataList) {
+                if (data.period != null) {
+                    dataList.add(data)
+                }
+            }
+            for (i in 1 until period) {
+                val summary = summaryPeriod(i)
+                banistersTRIMPGrowth += summary["banistersTRIMPGrowth"]?: 0.0
+                edwardsTRIMPGrowth += summary["edwardsTRIMPGrowth"]?: 0.0
+                luciasTRIMPGrowth += summary["luciasTRIMPGrowth"]?: 0.0
+                stangosTRIMPGrowth += summary["stangosTRIMPGrowth"]?: 0.0
+                customTRIMPGrowth += summary["customTRIMPGrowth"]?: 0.0
+            }
+        }
+        val hrValues = dataList.map { it.hr }
+        val maxHr = hrValues.maxOrNull()?.toDouble()
+        val minHr = hrValues.minOrNull()?.toDouble()
+        val averageHr = hrValues.average().toDouble()
+
+        val map = mutableMapOf<String, Double?>()
+        map["maxHr"] = maxHr
+        map["minHr"] = minHr
+        map["averageHr"] = "%.2f".format(averageHr).toDouble()
+        map["banistersTRIMPGrowth"] = "%.2f".format(banistersTRIMPGrowth).toDouble()
+        map["edwardsTRIMPGrowth"] = "%.2f".format(edwardsTRIMPGrowth).toDouble()
+        map["luciasTRIMPGrowth"] = "%.2f".format(luciasTRIMPGrowth).toDouble()
+        map["stangosTRIMPGrowth"] = "%.2f".format(stangosTRIMPGrowth).toDouble()
+        map["customTRIMPGrowth"] = "%.2f".format(customTRIMPGrowth).toDouble()
+        return map
+    }
 
     // 计算总结，区间内，包括间隔
+    private fun summaryAllPeriodWithGap(): Map<String, Double?> {
+        val dataList = mutableListOf<DeviceData>()
+        if (period == 1) {
+            // 没有用过period
+            for (data in deviceDataList) {
+                dataList.add(data)
+            }
+        } else {
+            val reverseList = deviceDataList.reversed()
+            val startIndex = reverseList.indexOfFirst { it.period == 1 }
+            val endIndex = reverseList.indexOfLast { it.period == period-1 }
+            if (startIndex != -1 && endIndex != -1 && startIndex <= endIndex) {
+                val subList = reverseList.subList(startIndex, endIndex + 1)
+                for (data in subList.reversed()) {
+                    dataList.add(data)
+                }
+            }
+        }
+        val hrValues = dataList.map { it.hr }
+        val maxHr = hrValues.maxOrNull()?.toDouble()
+        val minHr = hrValues.minOrNull()?.toDouble()
+        val averageHr = hrValues.average().toDouble()
+        val banistersTRIMPValues = dataList.map { it.BanistersTRIMP }
+        val banistersTRIMPGrowth = (banistersTRIMPValues.lastOrNull() ?: 0.0) - (banistersTRIMPValues.firstOrNull() ?: 0.0)
+        val edwardsTRIMPValues = dataList.map { it.EdwardsTRIMP }
+        val edwardsTRIMPGrowth = (edwardsTRIMPValues.lastOrNull() ?: 0.0) - (edwardsTRIMPValues.firstOrNull() ?: 0.0)
+        val luciasTRIMPValues = dataList.map { it.LuciasTRIMP }
+        val luciasTRIMPGrowth = (luciasTRIMPValues.lastOrNull() ?: 0.0) - (luciasTRIMPValues.firstOrNull() ?: 0.0)
+        val stangosTRIMPValues = dataList.map { it.StangosTRIMP }
+        val stangosTRIMPGrowth = (stangosTRIMPValues.lastOrNull() ?: 0.0) - (stangosTRIMPValues.firstOrNull() ?: 0.0)
+        val customTRIMPValues = dataList.map { it.CustomTRIMP }
+        val customTRIMPGrowth = (customTRIMPValues.lastOrNull() ?: 0.0) - (customTRIMPValues.firstOrNull() ?: 0.0)
+
+        val map = mutableMapOf<String, Double?>()
+        map["maxHr"] = maxHr
+        map["minHr"] = minHr
+        map["averageHr"] = "%.2f".format(averageHr).toDouble()
+        map["banistersTRIMPGrowth"] = "%.2f".format(-1*banistersTRIMPGrowth).toDouble()
+        map["edwardsTRIMPGrowth"] = "%.2f".format(-1*edwardsTRIMPGrowth).toDouble()
+        map["luciasTRIMPGrowth"] = "%.2f".format(-1*luciasTRIMPGrowth).toDouble()
+        map["stangosTRIMPGrowth"] = "%.2f".format(-1*stangosTRIMPGrowth).toDouble()
+        map["customTRIMPGrowth"] = "%.2f".format(-1*customTRIMPGrowth).toDouble()
+        return map
+    }
+
 
     // 计算总结，单个区间
+    private fun summaryPeriod(periodNum: Int): Map<String, Double?> {
+        val dataList = mutableListOf<DeviceData>()
+        if (period == 1) {
+            // 没有用过period
+            for (data in deviceDataList) {
+                dataList.add(data)
+            }
+        } else {
+            val reverseList = deviceDataList.reversed()
+            val startIndex = reverseList.indexOfFirst { it.period == periodNum }
+            val endIndex = reverseList.indexOfLast { it.period == periodNum }
+            if (startIndex != -1 && endIndex != -1 && startIndex <= endIndex) {
+                val subList = reverseList.subList(startIndex, endIndex + 1)
+                for (data in subList.reversed()) {
+                    dataList.add(data)
+                }
+            }
+        }
+        val hrValues = dataList.map { it.hr }
+        val maxHr = hrValues.maxOrNull()?.toDouble()
+        val minHr = hrValues.minOrNull()?.toDouble()
+        val averageHr = hrValues.average().toDouble()
+        val banistersTRIMPValues = dataList.map { it.BanistersTRIMP }
+        val banistersTRIMPGrowth = (banistersTRIMPValues.lastOrNull() ?: 0.0) - (banistersTRIMPValues.firstOrNull() ?: 0.0)
+        val edwardsTRIMPValues = dataList.map { it.EdwardsTRIMP }
+        val edwardsTRIMPGrowth = (edwardsTRIMPValues.lastOrNull() ?: 0.0) - (edwardsTRIMPValues.firstOrNull() ?: 0.0)
+        val luciasTRIMPValues = dataList.map { it.LuciasTRIMP }
+        val luciasTRIMPGrowth = (luciasTRIMPValues.lastOrNull() ?: 0.0) - (luciasTRIMPValues.firstOrNull() ?: 0.0)
+        val stangosTRIMPValues = dataList.map { it.StangosTRIMP }
+        val stangosTRIMPGrowth = (stangosTRIMPValues.lastOrNull() ?: 0.0) - (stangosTRIMPValues.firstOrNull() ?: 0.0)
+        val customTRIMPValues = dataList.map { it.CustomTRIMP }
+        val customTRIMPGrowth = (customTRIMPValues.lastOrNull() ?: 0.0) - (customTRIMPValues.firstOrNull() ?: 0.0)
+
+        val map = mutableMapOf<String, Double?>()
+        map["maxHr"] = maxHr
+        map["minHr"] = minHr
+        map["averageHr"] = "%.2f".format(averageHr).toDouble()
+        map["banistersTRIMPGrowth"] = "%.2f".format(-1*banistersTRIMPGrowth).toDouble()
+        map["edwardsTRIMPGrowth"] = "%.2f".format(-1*edwardsTRIMPGrowth).toDouble()
+        map["luciasTRIMPGrowth"] = "%.2f".format(-1*luciasTRIMPGrowth).toDouble()
+        map["stangosTRIMPGrowth"] = "%.2f".format(-1*stangosTRIMPGrowth).toDouble()
+        map["customTRIMPGrowth"] = "%.2f".format(-1*customTRIMPGrowth).toDouble()
+        return map
+    }
 
     // 底部提示信息条
     private fun showToast(message: String) {

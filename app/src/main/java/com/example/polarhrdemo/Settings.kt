@@ -32,15 +32,15 @@ object Settings {
     var showHRPercentage: Boolean = true
     var showHRZone: Boolean = true
     // HRV控制展示与记录
-    var showHRV: Boolean = false
+    var showHRV: Boolean = true
     var showSDRR:Boolean = true
     var showpNN50: Boolean = true
     var showRMSSD: Boolean = true
     // TRIMP控制展示与记录
     var showTRIMP: Boolean = true
-    var showBanister: Boolean = false
+    var showBanister: Boolean = true
     var showEdward: Boolean = true
-    var showLucia: Boolean = false
+    var showLucia: Boolean = true
     var showStango: Boolean = true
     var showCustom: Boolean = true
 
