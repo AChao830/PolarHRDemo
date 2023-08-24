@@ -181,6 +181,14 @@ class SharedPreferenceHelper(context: Context) {
         return sharedPreferences.getBoolean("showStango", true)
     }
 
+    fun saveShowCustom(showCustom: Boolean) {
+        sharedPreferences.edit().putBoolean("showCustom", showCustom).apply()
+    }
+
+    fun loadShowCustom(): Boolean {
+        return sharedPreferences.getBoolean("showCustom", true)
+    }
+
     fun savePlayer(player: String, deviceId: String) {
         sharedPreferences.edit().putString(player, deviceId).apply()
     }

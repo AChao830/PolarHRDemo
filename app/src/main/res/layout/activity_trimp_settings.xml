@@ -67,6 +67,16 @@
             android:scaleY="2"
             android:text="@string/stango_switch" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowCustom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:text="@string/custom_switch" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

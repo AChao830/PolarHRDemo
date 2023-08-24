@@ -286,6 +286,14 @@ class ZoneSettingActivity: AppCompatActivity() {
     private lateinit var textViewZone5: TextView
     private lateinit var textViewZone6: TextView
 
+    private lateinit var textViewZone0Coefficient: TextView
+    private lateinit var textViewZone1Coefficient: TextView
+    private lateinit var textViewZone2Coefficient: TextView
+    private lateinit var textViewZone3Coefficient: TextView
+    private lateinit var textViewZone4Coefficient: TextView
+    private lateinit var textViewZone5Coefficient: TextView
+    private lateinit var textViewZone6Coefficient: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_zone_settings)
@@ -307,6 +315,21 @@ class ZoneSettingActivity: AppCompatActivity() {
         textViewZone6 = findViewById(R.id.textViewZone6)
         textViewZone6.text = "ZONE 6: ${Settings.zone6}% - Infinity"
 
+        textViewZone0Coefficient = findViewById(R.id.textViewZone0Coefficient)
+        textViewZone0Coefficient.text = "ZONE 0 Coefficient: ${Settings.zone0Coefficient}"
+        textViewZone1Coefficient = findViewById(R.id.textViewZone1Coefficient)
+        textViewZone1Coefficient.text = "ZONE 1 Coefficient: ${Settings.zone1Coefficient}"
+        textViewZone2Coefficient = findViewById(R.id.textViewZone2Coefficient)
+        textViewZone2Coefficient.text = "ZONE 2 Coefficient: ${Settings.zone2Coefficient}"
+        textViewZone3Coefficient = findViewById(R.id.textViewZone3Coefficient)
+        textViewZone3Coefficient.text = "ZONE 3 Coefficient: ${Settings.zone3Coefficient}"
+        textViewZone4Coefficient = findViewById(R.id.textViewZone4Coefficient)
+        textViewZone4Coefficient.text = "ZONE 4 Coefficient: ${Settings.zone4Coefficient}"
+        textViewZone5Coefficient = findViewById(R.id.textViewZone5Coefficient)
+        textViewZone5Coefficient.text = "ZONE 5 Coefficient: ${Settings.zone5Coefficient}"
+        textViewZone6Coefficient = findViewById(R.id.textViewZone6Coefficient)
+        textViewZone6Coefficient.text = "ZONE 6 Coefficient: ${Settings.zone6Coefficient}"
+
         val buttonChangeZone1: Button = findViewById(R.id.buttonChangeZone1)
         buttonChangeZone1.setOnClickListener {
             onClickChangeZone1(it)
@@ -327,6 +350,21 @@ class ZoneSettingActivity: AppCompatActivity() {
         buttonChangeZone5.setOnClickListener {
             onClickChangeZone5(it)
         }
+
+        val buttonChangeZone0Coefficient: Button = findViewById(R.id.buttonChangeZone0Coefficient)
+        buttonChangeZone0Coefficient.setOnClickListener { onClickChangeZone0Coefficient(it) }
+        val buttonChangeZone1Coefficient: Button = findViewById(R.id.buttonChangeZone1Coefficient)
+        buttonChangeZone1Coefficient.setOnClickListener { onClickChangeZone1Coefficient(it) }
+        val buttonChangeZone2Coefficient: Button = findViewById(R.id.buttonChangeZone2Coefficient)
+        buttonChangeZone2Coefficient.setOnClickListener { onClickChangeZone2Coefficient(it) }
+        val buttonChangeZone3Coefficient: Button = findViewById(R.id.buttonChangeZone3Coefficient)
+        buttonChangeZone3Coefficient.setOnClickListener { onClickChangeZone3Coefficient(it) }
+        val buttonChangeZone4Coefficient: Button = findViewById(R.id.buttonChangeZone4Coefficient)
+        buttonChangeZone4Coefficient.setOnClickListener { onClickChangeZone4Coefficient(it) }
+        val buttonChangeZone5Coefficient: Button = findViewById(R.id.buttonChangeZone5Coefficient)
+        buttonChangeZone5Coefficient.setOnClickListener { onClickChangeZone5Coefficient(it) }
+        val buttonChangeZone6Coefficient: Button = findViewById(R.id.buttonChangeZone6Coefficient)
+        buttonChangeZone6Coefficient.setOnClickListener { onClickChangeZone6Coefficient(it) }
     }
 
     // 处理改变zone1下界事务按钮
@@ -466,6 +504,174 @@ class ZoneSettingActivity: AppCompatActivity() {
                 textViewZone5.text = "ZONE 5: ${Settings.zone5}% - ${Settings.zone6}%"
                 sharedPreferenceHelper.saveZone5(newZone5)
                 showToast("Changed zone5 lower boundary to $newZone5")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 0 Coefficient
+    private fun onClickChangeZone0Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone0 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone0Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone0Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone0Coefficient != null) {
+                Settings.zone0Coefficient = newZone0Coefficient
+                textViewZone0Coefficient.text = "ZONE 0 Coefficient: ${Settings.zone0Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone0Coefficient", newZone0Coefficient)
+                showToast("Changed zone0 coefficient to $newZone0Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 1 Coefficient
+    private fun onClickChangeZone1Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone1 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone1Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone1Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone1Coefficient != null) {
+                Settings.zone1Coefficient = newZone1Coefficient
+                textViewZone1Coefficient.text = "ZONE 1 Coefficient: ${Settings.zone1Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone1Coefficient", newZone1Coefficient)
+                showToast("Changed zone1 coefficient to $newZone1Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 2 Coefficient
+    private fun onClickChangeZone2Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone2 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone2Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone2Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone2Coefficient != null) {
+                Settings.zone2Coefficient = newZone2Coefficient
+                textViewZone2Coefficient.text = "ZONE 2 Coefficient: ${Settings.zone2Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone2Coefficient", newZone2Coefficient)
+                showToast("Changed zone2 coefficient to $newZone2Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 3 Coefficient
+    private fun onClickChangeZone3Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone3 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone3Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone3Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone3Coefficient != null) {
+                Settings.zone3Coefficient = newZone3Coefficient
+                textViewZone3Coefficient.text = "ZONE 3 Coefficient: ${Settings.zone3Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone3Coefficient", newZone3Coefficient)
+                showToast("Changed zone3 coefficient to $newZone3Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 4 Coefficient
+    private fun onClickChangeZone4Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone4 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone4Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone4Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone4Coefficient != null) {
+                Settings.zone4Coefficient = newZone4Coefficient
+                textViewZone4Coefficient.text = "ZONE 4 Coefficient: ${Settings.zone4Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone4Coefficient", newZone4Coefficient)
+                showToast("Changed zone4 coefficient to $newZone4Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 5 Coefficient
+    private fun onClickChangeZone5Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone5 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone5Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone5Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone5Coefficient != null) {
+                Settings.zone5Coefficient = newZone5Coefficient
+                textViewZone5Coefficient.text = "ZONE 5 Coefficient: ${Settings.zone5Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone5Coefficient", newZone5Coefficient)
+                showToast("Changed zone5 coefficient to $newZone5Coefficient")
+            } else {
+                showToast("Invalid input")
+            }
+        }
+        dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // Zone 6 Coefficient
+    private fun onClickChangeZone6Coefficient(view: View) {
+        val dialog = AlertDialog.Builder(this, R.style.PolarTheme)
+        dialog.setTitle("Enter new zone6 coefficient")
+        val viewInflated = LayoutInflater.from(applicationContext).inflate(R.layout.zone_lower_boundary_input_dialog, view.rootView as ViewGroup, false)
+        val input = viewInflated.findViewById<EditText>(R.id.input_zone_lower_boundary)
+        input.setText(Settings.zone6Coefficient.toString())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        dialog.setView(viewInflated)
+        dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
+            val newZone6Coefficient = input.text.toString().toDoubleOrNull()
+            if (newZone6Coefficient != null) {
+                Settings.zone6Coefficient = newZone6Coefficient
+                textViewZone6Coefficient.text = "ZONE 6 Coefficient: ${Settings.zone6Coefficient}"
+                sharedPreferenceHelper.saveZoneCoefficient("zone6Coefficient", newZone6Coefficient)
+                showToast("Changed zone6 coefficient to $newZone6Coefficient")
             } else {
                 showToast("Invalid input")
             }
@@ -697,6 +903,12 @@ class TRIMPSettingActivity: AppCompatActivity() {
         showStangoSwitch.setOnCheckedChangeListener { _, isChecked ->
             onCheckedChangeShowStangoSwitch(isChecked)
         }
+
+        val showCustomSwitch: SwitchCompat = findViewById(R.id.switchShowCustom)
+        showCustomSwitch.isChecked = Settings.showCustom // 初始化开关的状态
+        showCustomSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeShowCustomSwitch(isChecked)
+        }
     }
 
     private fun onCheckedChangeShowTRIMPSwitch(isChecked: Boolean) {
@@ -756,6 +968,18 @@ class TRIMPSettingActivity: AppCompatActivity() {
             // 当开关按钮被关闭时执行的操作
             Settings.showStango = false
             sharedPreferenceHelper.saveShowStango(false)
+        }
+    }
+
+    private fun onCheckedChangeShowCustomSwitch(isChecked: Boolean) {
+        if (isChecked) {
+            // 当开关按钮被打开时执行的操作
+            Settings.showCustom = true
+            sharedPreferenceHelper.saveShowCustom(true)
+        } else {
+            // 当开关按钮被关闭时执行的操作
+            Settings.showCustom = false
+            sharedPreferenceHelper.saveShowCustom(false)
         }
     }
 }

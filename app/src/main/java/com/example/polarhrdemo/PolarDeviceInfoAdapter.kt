@@ -80,6 +80,9 @@ class PolarDeviceInfoAdapter(private val deviceList: List<PolarDevice>) :
             if (Settings.showStango) {
                 textTRIMP += "StangosTRIMP: ${device.getLatestStangosTRIMP()} "
             }
+            if (Settings.showCustom) {
+                textTRIMP += "CustomTRIMP: ${device.getLatestCustomTRIMP()} "
+            }
             if (textTRIMP != "") {
                 textTRIMP += "\n"
             }

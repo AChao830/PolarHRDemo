@@ -5,8 +5,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <LinearLayout
+        <LinearLayout
         android:id="@+id/zoneSettingsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -31,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,11 +45,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone0CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone0Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone0 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone0Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone1Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -52,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -69,11 +103,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone1CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone1Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone1 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone1Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone2Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -81,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -98,11 +161,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone2CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone2Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone2 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone2Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone3Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -110,7 +202,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -127,11 +219,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone3CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone3Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone3 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone3Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone4Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -139,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -156,11 +277,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone4CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone4Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone4 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone4Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone5Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -168,7 +318,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -185,11 +335,40 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/zone5CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone5Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone5 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone5Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/zone6Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
 
             <TextView
@@ -197,14 +376,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                tools:text="Max Heart Rate: 200"
+                android:text="Max Heart Rate: 200"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/zone6CoefficientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/switchTestMode">
+
+            <TextView
+                android:id="@+id/textViewZone6Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Zone6 Coefficient: 0"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeZone6Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_coefficient_button"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
     </LinearLayout>
+
+    </ScrollView>
 
 
 

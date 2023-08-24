@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         Settings.showEdward = sharedPreferenceHelper.loadShowEdward()
         Settings.showLucia = sharedPreferenceHelper.loadShowLucia()
         Settings.showStango = sharedPreferenceHelper.loadShowStango()
+        Settings.showCustom = sharedPreferenceHelper.loadShowCustom()
         Settings.LT1 = sharedPreferenceHelper.loadLT1()
         Settings.LT2 = sharedPreferenceHelper.loadLT2()
         Settings.zone0Coefficient = sharedPreferenceHelper.loadZoneCoefficient("zone0Coefficient")

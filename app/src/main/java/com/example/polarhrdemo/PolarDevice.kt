@@ -49,6 +49,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
     private var latestEdwardsTRIMP = "0"
     private var latestLuciasTRIMP = "0"
     private var latestStangosTRIMP = "0"
+    private var latestCustomTRIMP = "0"
     lateinit var fwVersion: String // 储存fw版本
     private var battery: String = "0" // 储存电量
 
@@ -88,6 +89,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val EdwardsTRIMP: Double,
         val LuciasTRIMP: Double,
         val StangosTRIMP: Double,
+        val CustomTRIMP:Double,
         val period: Int? // 区间
     )
 
@@ -203,6 +205,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         val newEdwardsTRIMP: Double = calculateTRIMP("Edwards", Settings.gender)
         val newLuciasTRIMP: Double = calculateTRIMP("Lucias", Settings.gender)
         val newStangosTRIMP: Double = calculateTRIMP("Stangos", Settings.gender)
+        val newCustomTRIMP: Double = calculateTRIMP("Custom", Settings.gender)
         // 更新数据
         latestHeartRate = polarData.hr.toString()
         latestHRPercentage = "%.2f".format(newHrPercentage) + "%"
@@ -211,6 +214,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         latestEdwardsTRIMP = "%.2f".format(newEdwardsTRIMP)
         latestLuciasTRIMP = "%.2f".format(newLuciasTRIMP)
         latestStangosTRIMP = "%.2f".format(newStangosTRIMP)
+        latestCustomTRIMP = "%.2f".format(newCustomTRIMP)
         if (isRecord) {
             val newSDRRValue = if (rrAvailable) newSDRR else null
             val newpNN50Value = if (rrAvailable) newpNN50 else null
@@ -228,6 +232,7 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 newEdwardsTRIMP,
                 newLuciasTRIMP,
                 newStangosTRIMP,
+                newCustomTRIMP,
                 newPeriodValue
             )
             deviceDataList.add(0, tempData)
@@ -310,19 +315,24 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
         return latestBanistersTRIMP
     }
 
-    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    // 提供给recycleView使用，获取最新的EdwardsTRIMP
     fun getLatestEdwardsTRIMP(): String {
         return latestEdwardsTRIMP
     }
 
-    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    // 提供给recycleView使用，获取最新的LuciasTRIMP
     fun getLatestLuciasTRIMP(): String {
         return latestLuciasTRIMP
     }
 
-    // 提供给recycleView使用，获取最新的BanistersTRIMP
+    // 提供给recycleView使用，获取最新的StangosTRIMP
     fun getLatestStangosTRIMP(): String {
         return latestStangosTRIMP
+    }
+
+    // 提供给recycleView使用，获取最新的CustomTRIMP
+    fun getLatestCustomTRIMP(): String {
+        return latestCustomTRIMP
     }
 
     // 开始监听
@@ -418,6 +428,9 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
             if (Settings.showStango) {
                 csvHeader += ",StangosTRIMP"
             }
+            if (Settings.showCustom) {
+                csvHeader += ",CustomTRIMP"
+            }
         }
         csvHeader += ",Period\n"
         val csvContent = StringBuilder(csvHeader)
@@ -459,6 +472,9 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                 }
                 if (Settings.showStango) {
                     csvLine += ",${"%.2f".format(data.StangosTRIMP)}"
+                }
+                if (Settings.showCustom) {
+                    csvLine += ",${"%.2f".format(data.CustomTRIMP)}"
                 }
             }
             csvLine += ",$periodValue\n"
@@ -553,6 +569,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                     sheet.addCell(Label(c, 1, "StangosTRIMP"))
                     c += 1
                 }
+                if (Settings.showCustom) {
+                    sheet.addCell(Label(c, 1, "CustomTRIMP"))
+                    c += 1
+                }
             }
             sheet.addCell(Label(c, 1, "Period"))
 
@@ -604,6 +624,10 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                     }
                     if (Settings.showStango) {
                         sheet.addCell(Label(c, index + 2, "%.2f".format(data.StangosTRIMP)))
+                        c += 1
+                    }
+                    if (Settings.showCustom) {
+                        sheet.addCell(Label(c, index + 2, "%.2f".format(data.CustomTRIMP)))
                         c += 1
                     }
                 }
@@ -677,6 +701,14 @@ class PolarDevice (val groupId:String, val deviceId: String, private val context
                     (2.54*t*hrPercentageList.count { it > 78 && it <= 85 }) +
                     (3.61*t*hrPercentageList.count { it > 85 && it <= 92 }) +
                     (5.16*t*hrPercentageList.count { it > 92})
+        } else if (method == "Custom") {
+            return (Settings.zone0Coefficient*t*hrPercentageList.count { it < Settings.zone1 }) +
+                    (Settings.zone1Coefficient*t*hrPercentageList.count { it >= Settings.zone1 && it < Settings.zone2 }) +
+                    (Settings.zone2Coefficient*t*hrPercentageList.count { it >= Settings.zone2 && it < Settings.zone3 }) +
+                    (Settings.zone3Coefficient*t*hrPercentageList.count { it >= Settings.zone3 && it < Settings.zone4 }) +
+                    (Settings.zone4Coefficient*t*hrPercentageList.count { it >= Settings.zone4 && it < Settings.zone5 }) +
+                    (Settings.zone5Coefficient*t*hrPercentageList.count { it >= Settings.zone5 && it < Settings.zone6 }) +
+                    (Settings.zone6Coefficient*t*hrPercentageList.count { it >= Settings.zone6 })
         }
         return 0.0
     }

@@ -41,6 +41,7 @@
     <string name="edward_switch">Show Edward\'s TRIMP</string>
     <string name="lucia_switch">Show Lucia\'s TRIMP</string>
     <string name="stango_switch">Show Stango\'s TRIMP</string>
+    <string name="custom_switch">Show Custom TRIMP</string>
     <string name="scan_button">Scan Devices</string>
     <string name="scan_page_button">Scan</string>
     <string name="copy_device_id_button">Copy ID</string>
@@ -48,4 +49,5 @@
     <string name="change_player_device_id_button">Change</string>
     <string name="clear_player_device_id_button">Clear</string>
     <string name="player_button">Players</string>
+    <string name="change_coefficient_button">Change</string>
 </resources>

@@ -42,6 +42,7 @@ object Settings {
     var showEdward: Boolean = true
     var showLucia: Boolean = false
     var showStango: Boolean = true
+    var showCustom: Boolean = true
 
     var Player1: String = ""
     var Player2: String = ""
