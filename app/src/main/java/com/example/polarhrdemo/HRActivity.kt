@@ -24,6 +24,7 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
     private val polarDeviceGroupList = mutableListOf<PolarDeviceGroup>()
     private lateinit var groupName: String
     private lateinit var deviceId: String
+    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     var testMode = Settings.testMode
 
@@ -34,6 +35,8 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hr)
+
+        sharedPreferenceHelper = SharedPreferenceHelper(this)
 
         // 初始化RecyclerView和适配器
         recyclerViewDeviceGroup = findViewById(R.id.recyclerViewDeviceGroup)
@@ -177,6 +180,9 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
         val input = viewInflated.findViewById<EditText>(R.id.input_device_id)
         input.inputType = InputType.TYPE_CLASS_TEXT
         dialog.setView(viewInflated)
+        dialog.setNeutralButton("Choose") { _: DialogInterface?, _: Int ->
+            showDialogChooseFromPlayer(view, groupId)
+        }
         dialog.setPositiveButton("OK") { _: DialogInterface?, _: Int ->
             deviceId = input.text.toString().uppercase()
             val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
@@ -190,6 +196,148 @@ class HRActivity : AppCompatActivity() , UpdateCallback {
             }
         }
         dialog.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int -> dialogInterface.cancel() }
+        dialog.show()
+    }
+
+    // 处理从Player中选择
+    private fun showDialogChooseFromPlayer(view: View, groupId: String) {
+        val options = playerList.toTypedArray()
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Player")
+            .setSingleChoiceItems(options, -1) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        deviceId = Settings.Player1
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    1 -> {
+                        deviceId = Settings.Player2
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    2 -> {
+                        deviceId = Settings.Player3
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    3 -> {
+                        deviceId = Settings.Player4
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    4 -> {
+                        deviceId = Settings.Player5
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    5 -> {
+                        deviceId = Settings.Player6
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    6 -> {
+                        deviceId = Settings.Player7
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                    7 -> {
+                        deviceId = Settings.Player8
+                        if (deviceId != "") {
+                            val polarDeviceGroup = polarDeviceGroupList.find { it.groupId == groupId }
+                            if (polarDeviceGroup != null) {
+                                val newDevice = PolarDevice(groupId, deviceId, applicationContext, testMode)
+                                newDevice.connectToDevice() // 开始连接
+                                newDevice.setUpdateCallback(this) // 设置更新callback
+                                newDevice.setPlotterListener(this)
+                                polarDeviceGroup.addDevice(newDevice)
+                                polarDeviceGroupAdapter.updateData()
+                            }
+                        } else {
+                            showToast("Player does not have a valid device ID")
+                        }
+                    }
+                }
+            }
+        val dialog = builder.create()
         dialog.show()
     }
 
