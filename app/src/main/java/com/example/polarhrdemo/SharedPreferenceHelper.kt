@@ -218,6 +218,6 @@ class SharedPreferenceHelper(context: Context) {
     }
 
     fun loadZoneCoefficient(zone: String): Double {
-        return sharedPreferences.getFloat(zone, 0.0f).toDouble()
+        return "%.2f".format(sharedPreferences.getFloat(zone, 0.0f)).toDouble()
     }
 }
