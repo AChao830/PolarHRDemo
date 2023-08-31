@@ -69,7 +69,7 @@ class SettingActivity: AppCompatActivity() {
         buttonChangeLT1.setOnClickListener { onClickChangeLT1Button(it) }
 
         textViewLT2 = findViewById(R.id.textViewLT2)
-        textViewLT2.text = "LT1: ${Settings.LT2}%"
+        textViewLT2.text = "LT2: ${Settings.LT2}%"
         val buttonChangeLT2: Button = findViewById(R.id.buttonChangeLT2)
         buttonChangeLT2.setOnClickListener { onClickChangeLT2Button(it) }
 
